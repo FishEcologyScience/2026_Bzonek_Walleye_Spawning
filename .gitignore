@@ -1,0 +1,28 @@
+# R session files
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.RDataTmp*
+
+# Large data files - exclude by file type (except in 01 - Data/ which uses LFS)
+/*.csv
+/*.rds
+/*.xlsx
+/02 - Scripts/**/*.csv
+/02 - Scripts/**/*.rds
+/04 - Outputs/**/*.csv
+/04 - Outputs/**/*.rds
+
+# Output files
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.tiff
+*.tif
+
+# Specific directories 
+# 01 - Data/
+# 04 - Outputs/
+CLAUDE.md

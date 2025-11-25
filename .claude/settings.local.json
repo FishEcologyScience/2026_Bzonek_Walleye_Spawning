@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\03 - Interactive Application/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\01 - Data/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Read(/C:\\Users\\Administrator\\Desktop\\R Working Directory\\GitHub Desktop\\WalleyeReport\\02 - Scripts/**)",
+      "Bash(git rm:*)",
+      "Bash(git add:*)",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
