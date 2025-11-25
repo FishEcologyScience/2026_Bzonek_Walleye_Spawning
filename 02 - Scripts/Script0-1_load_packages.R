@@ -37,7 +37,7 @@ library('beepr') #Add warning chimes
 ###Lab package
 #Only need to install during updates
 # devtools::install_github("pbzonek/telemetrytoolsFESL")
- 
+
 #remotes::install_github("jsta/glatos")
 
 library('telemetrytoolsFESL')
