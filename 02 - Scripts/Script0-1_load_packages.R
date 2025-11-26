@@ -31,6 +31,7 @@ library('ggpmisc') #Add r2 to ggplots
 library('ggridges') #Make ridges boxplot
 library('rptR') #Look at Intraclass Correlation Coefficients
 library('beepr') #Add warning chimes
+library('keyring') #Manage secrets such as google maps API
 
 ###Packages off CRAN
 #----------------------------#

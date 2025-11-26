@@ -45,7 +45,7 @@ shapefile <- st_transform(shapefile, "WGS84") #Also try "EPSG:4326"; 'EPSG:32724
 # To set key initially, run once: keyring::key_set("google_api", username = "Jake")
 param_google_api_key <- keyring::key_get("google_api", username = "Jake")
 ggmap::register_google(key = param_google_api_key)
-HHmap <- get_googlemap(center = c(lon=mean(data_hab$Start_Longitude), lat=mean(data_hab$Start_Latitude)),
+HHmap <- ggmap::get_googlemap(center = c(lon=mean(data_hab$Start_Longitude), lat=mean(data_hab$Start_Latitude)),
                        zoom = 13, scale = 4, size = c(720, 720),
                        maptype = c("satellite"))
 
