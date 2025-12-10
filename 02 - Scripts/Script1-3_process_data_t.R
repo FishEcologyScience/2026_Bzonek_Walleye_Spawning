@@ -472,6 +472,14 @@ temp_summary_depth <- data_spawn %>%
   )
 
 cat("\n--- DEPTH PATTERNS ---\n")
+cat("Detection depth (m) for data_det_allday_April:\n")
+cat("  Mean:", round(mean(data_det_allday_April$sensor_value.Cal, na.rm = TRUE), 2),
+    ", SD:", round(sd(data_det_allday_April$sensor_value.Cal, na.rm = TRUE), 2), "\n")
+cat("  Range:", round(min(data_det_allday_April$sensor_value.Cal, na.rm = TRUE), 2), "-",
+    round(max(data_det_allday_April$sensor_value.Cal, na.rm = TRUE), 2), "\n")
+cat("Detections equal or shallower than a given depth:") 
+func_calculate_exceeding(x=-data_det_allday_April$sensor_value.Cal, thresholds=c(param_min_spawn_depth, 0, -1, -2, -3, -4, -5))
+
 cat("Spawning depth (m):\n")
 cat("  Mean:", round(mean(data_spawn$meanDepth, na.rm = TRUE), 2),
     ", SD:", round(sd(data_spawn$meanDepth, na.rm = TRUE), 2), "\n")
