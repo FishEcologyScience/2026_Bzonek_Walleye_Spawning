@@ -15,11 +15,6 @@
 ## --------------------------------------------------------------#
 
 
-### Set parameters
-#----------------------------#
-param_min_dist <- 25  # Same as Script1-1
-
-
 ### Load walleye transect shapefile
 #----------------------------#
 shapefile_Walleye <- sf::read_sf("01 - Data/WalleyeSurveysLines/HH_WalleyeSpawningSurveyLines.shp")
@@ -68,43 +63,53 @@ temp_transect_utm <- shapefile_Walleye %>%
   sf::st_transform(crs = 32618) %>%  # Reproject to UTM (same CRS as habitat buffers)
   sf::st_cast("LINESTRING")  # Convert MULTILINESTRING to individual LINESTRING features
 
-# Step 4: Find where transect lines intersect with buffered habitat zones
-# st_union combines all habitat buffers into single polygon
-# st_intersection clips transect lines to only the parts that overlap with habitat buffers
-# Result: only line segments within 25m of any habitat site
-temp_intersection <- sf::st_intersection(temp_transect_utm, sf::st_union(temp_hab_buffered))
+# Step 4: Sample ALL transect lines into points first (before filtering)
+# This ensures we capture all potential points, then filter by distance
 
-# Check geometry types after intersection
-cat("Geometry types after intersection:", paste(unique(sf::st_geometry_type(temp_intersection)), collapse = ", "), "\n")
+# Sample points along each line (creates MULTIPOINT geometries)
+temp_sampled <- temp_transect_utm %>%
+  sf::st_cast("LINESTRING", warn = FALSE) %>%  # Ensure LINESTRING format
+  sf::st_line_sample(density = 1/5)  # Sample one point every 5 meters along ALL lines
 
-# Step 5: Convert intersected line segments to point samples for visualization
-temp_nearby_points <- temp_intersection %>%
-  # Filter to keep only LINESTRING and MULTILINESTRING geometries
-  filter(sf::st_geometry_type(.) %in% c("LINESTRING", "MULTILINESTRING")) %>%
-  # Convert geometry column to sfc for proper handling
-  sf::st_geometry() %>%
-  sf::st_cast("LINESTRING", warn = FALSE) %>%  # Cast to simple LINESTRING
-  sf::st_line_sample(density = 1/5) %>%  # Sample one point every 5 meters along intersected lines
-  sf::st_cast("POINT") %>%  # Convert sampled locations to individual point features
-  sf::st_sf() %>%  # Convert to sf data frame
-  mutate(point_id = row_number())  # Add unique ID to each point
+cat("Sampled features:", nrow(temp_sampled), "\n")
 
-cat("Points within", param_min_dist, "m of habitat:", nrow(temp_nearby_points), "\n")
+# Extract all individual points from MULTIPOINT geometries properly
+# st_coordinates extracts X, Y coords from all points in MULTIPOINT
+temp_coords <- sf::st_coordinates(temp_sampled)
+cat("Total individual points extracted:", nrow(temp_coords), "\n")
 
-# Step 6: Verify distances are correct (should all be ≤ param_min_dist)
-temp_distances_check <- temp_nearby_points %>%
+# Convert coordinate matrix back to sf POINT object
+temp_all_points <- temp_coords %>%
+  as.data.frame() %>%
+  sf::st_as_sf(coords = c("X", "Y"), crs = 32618) %>%  # Create POINT features from coordinates
+  mutate(point_id = row_number())  # Add unique ID to each individual point
+
+cat("Total points sampled from all transects:", nrow(temp_all_points), "\n")
+
+# Step 5: Filter points to keep only those within param_min_dist of any habitat site
+# Calculate distance from each point to nearest habitat site
+temp_all_points_dist <- temp_all_points %>%
   mutate(
     nearest_hab_dist = as.numeric(
-      sf::st_distance(geometry, temp_hab_sites, by_element = FALSE) %>%  # Distance matrix to all habitat sites
+      sf::st_distance(sf::st_geometry(.), sf::st_geometry(temp_hab_sites), by_element = FALSE) %>%  # Distance matrix to all habitat sites
         apply(1, min)  # For each point, find minimum distance to any habitat site
     )
   )
 
-cat("Distance check - min:", round(min(temp_distances_check$nearest_hab_dist, na.rm=T), 1),
-    "m, max:", round(max(temp_distances_check$nearest_hab_dist, na.rm=T), 1), "m\n")
+# Keep only points within the distance threshold
+temp_nearby_points <- temp_all_points_dist %>%
+  filter(nearest_hab_dist <= param_min_dist)
+
+cat("Points within", param_min_dist, "m of habitat:", nrow(temp_nearby_points),
+    "(", round(100 * nrow(temp_nearby_points) / nrow(temp_all_points), 1), "% of total)\n")
+
+# Step 6: Verify distances are correct (should all be ≤ param_min_dist)
+cat("Distance verification - min:", round(min(temp_nearby_points$nearest_hab_dist, na.rm=T), 1),
+    "m, max:", round(max(temp_nearby_points$nearest_hab_dist, na.rm=T), 1), "m\n")
 
 # Step 7: Transform final result back to WGS84 (matches other datasets in project)
 shapefile_Walleye_buffered <- temp_nearby_points %>%
+  select(-nearest_hab_dist) %>%  # Remove distance column for cleaner output
   sf::st_transform(crs = 4326)
 
 
@@ -141,13 +146,14 @@ print(temp_plot_buffered)
 cat("\n--- BUFFERING SUMMARY ---\n")
 cat("Distance threshold:", param_min_dist, "m\n")
 cat("Original transect lines:", nrow(shapefile_Walleye), "\n")
-cat("Habitat sites buffered:", nrow(temp_hab_sites), "\n")
-cat("Intersected line segments:", nrow(temp_intersection), "\n")
-cat("Sample points in buffered zones:", nrow(temp_nearby_points), "\n")
+cat("Habitat sites:", nrow(temp_hab_sites), "\n")
+cat("Total sample points from transects:", nrow(temp_all_points), "\n")
+cat("Sample points within buffer:", nrow(temp_nearby_points), "\n")
+cat("Proportion retained:", round(100 * nrow(temp_nearby_points) / nrow(temp_all_points), 1), "%\n")
 cat("\nDistance verification (m):\n")
-cat("  Mean distance to nearest habitat:", round(mean(temp_distances_check$nearest_hab_dist, na.rm=T), 1), "\n")
-cat("  Min distance:", round(min(temp_distances_check$nearest_hab_dist, na.rm=T), 1), "\n")
-cat("  Max distance:", round(max(temp_distances_check$nearest_hab_dist, na.rm=T), 1), "\n")
+cat("  Mean distance to nearest habitat:", round(mean(temp_nearby_points$nearest_hab_dist, na.rm=T), 1), "\n")
+cat("  Min distance:", round(min(temp_nearby_points$nearest_hab_dist, na.rm=T), 1), "\n")
+cat("  Max distance:", round(max(temp_nearby_points$nearest_hab_dist, na.rm=T), 1), "\n")
 
 
 ### Cleanup
