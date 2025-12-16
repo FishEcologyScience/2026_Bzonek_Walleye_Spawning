@@ -99,8 +99,8 @@ temp_dist.thresholds <- c(0.005, 0.01, 0.025, 0.05, 0.075)
 
 ### Non-spatial model
 RF_non.spatial <- spatialRF::rf(
-  data = mutate(data_habfish_pseudo.train, Presence = as.numeric(Presence)),
-  dependent.variable.name = "Presence",
+  data = mutate(data_habfish_pseudo.train, Occurrence = as.numeric(Occurrence)),
+  dependent.variable.name = "Occurrence",
   predictor.variable.names = c("Slope", "SubstrateDiversity", "Fetch", "Light", "Year",
                                "Sand", "Gravel", "Cobble", "Rubble"),
   distance.matrix = as.matrix(temp_dist.matrix),

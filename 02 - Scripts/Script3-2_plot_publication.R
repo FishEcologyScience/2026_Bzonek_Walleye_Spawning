@@ -138,7 +138,7 @@ ggsave(paste0(param_output_dir, "/FigS4_WalleyeByYear.jpeg"),
 ### S3: Variable Correlations 
 #----------------------------#
 temp_cor_matrix <- data_habfish_raw %>%
-  select(Silt:Armourstone, SubstrateDiversity, Fetch, Slope) %>%
+  select(Silt:Boulder, SubstrateDiversity, Fetch, Slope, Light) %>%
   cor()
 
 # Display

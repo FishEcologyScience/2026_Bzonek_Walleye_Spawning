@@ -96,8 +96,8 @@ plots$model_RF_plot$RF_R2
   #random seed for reproducibility
   set.seed(param_seed)
   
-  model_RF2 <- randomForest(#formula=Presence ~ Slope + Light + Year + Sand + Gravel + Cobble + SubstrateDiversity, 
-                            formula= Presence ~ Slope + SubstrateDiversity + Fetch +
+  model_RF2 <- randomForest(#formula=Occurrence ~ Slope + Light + Year + Sand + Gravel + Cobble + SubstrateDiversity, 
+                            formula= Occurrence ~ Slope + SubstrateDiversity + Fetch +
                                     Light + Year + Sand + Gravel + Cobble + Rubble, #SAV_Cover WetlandDistance
                            
                            data = data_habfish_pseudo.train, 
@@ -116,7 +116,7 @@ plots$model_RF_plot$RF_R2
   #----------------------------#
   ###Evaluate RandomForest model
   data_habfish_pseudo.test$predicted_pres <- predict(model_RF2, data_habfish_pseudo.test)  
-  model_RF2_CM <- caret::confusionMatrix(data_habfish_pseudo.test$predicted_pres, data_habfish_pseudo.test$Presence, positive="1")
+  model_RF2_CM <- caret::confusionMatrix(data_habfish_pseudo.test$predicted_pres, data_habfish_pseudo.test$Occurrence, positive="1")
 
   
   model_RF2_VarImp <- data.frame(importance(model_RF2)) %>% 
@@ -150,7 +150,7 @@ plots$model_RF_plot$RF_R2
   ###Plot performance metrics for predictor variables from both models
   #% Increase Mean Square Error
   
-  plots$model_RF_plot$RF_RF2_R2 <- rbind(cbind(select(model_RF2_VarImp, predictor, pR2), Model="Walleye Presence"))  %>% 
+  plots$model_RF_plot$RF_RF2_R2 <- rbind(cbind(select(model_RF2_VarImp, predictor, pR2), Model="Walleye Occurrence"))  %>% 
   rbind(cbind(select(model_RF_VarImp, predictor, pR2), Model="Walleye Abundance")) %>% 
    
      ggplot(., aes(x=fct_reorder(.f=predictor, .x=pR2, .fun=max), y=pR2))+
@@ -161,7 +161,7 @@ plots$model_RF_plot$RF_R2
       scale_fill_manual(values=c("#b7001480","#01c04c80"))+
       theme_bw()+ylab(bquote("pseudo-R"^2))+
       xlab("Predictor")+geom_hline(yintercept = 0, linetype=2)+
-      #ggtitle(bquote("Variable Importance for Walleye presence and abundance"))+
+      #ggtitle(bquote("Variable Importance for Walleye occurrence and abundance"))+
       theme(legend.position="bottom")
   
   plots$model_RF_plot$RF_RF2_R2
@@ -265,7 +265,7 @@ plots$model_RF_plot$univiariate_RF2$combined <-
      (Cobble.plot + Gravel.plot)/
      (Sand.plot + Rubble.plot)+
      (SubstrateDiversity.plot + plot_spacer())
-      #plot_annotation(title='Predictors of Walleye Efishing survey presence')
+      #plot_annotation(title='Predictors of Walleye Efishing survey occurrence')
      )
 plots$model_RF_plot$univiariate_RF2$combined
 

@@ -336,12 +336,12 @@ data_habfish_pseudo <- df_habfish_key %>%
 
 #Combine data and add a binary column
 data_habfish_pseudo <- bind_rows(data_habfish_pseudo, temp_absences) %>% 
- mutate(Presence = case_when(Total.Count > 1 ~ 1, #Turn counts into 1s
+ mutate(Occurrence = case_when(Total.Count > 1 ~ 1, #Turn counts into 1s
                              TRUE ~ Total.Count),
-        Presence = as.factor(Presence),
+        Occurrence = as.factor(Occurrence),
         Year = as.factor(Year)
         )
-with(data_habfish_pseudo, table(Presence, Year)) %>% colSums()
+with(data_habfish_pseudo, table(Occurrence, Year)) %>% colSums()
 
 ###Split up data
 set.seed(param_seed)

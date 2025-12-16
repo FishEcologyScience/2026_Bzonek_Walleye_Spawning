@@ -249,7 +249,7 @@ plots$methods$Walleye
 rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in name
 
 
-### Presence by Year
+### Occurrence by Year
 plots$maps$Walleye <- ggplot()+
   geom_sf(data=shapefile, colour = "black", fill=NA, inherit.aes = FALSE)+
   #efishing

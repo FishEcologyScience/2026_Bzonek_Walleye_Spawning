@@ -101,7 +101,7 @@ temp_summary_abundance <- bind_rows(lapply(loop_rf_results, function(x) {  # Loo
 
 temp_summary_presence <- bind_rows(lapply(loop_rf_results, function(x) {  # Loop through each iteration's results
   if(!is.data.frame(x$presence_varimp)) return(NULL)  # Skip if data not available
-  x$presence_varimp %>% mutate(seed = x$seed, model = "Presence")  # Add seed and model columns
+  x$presence_varimp %>% mutate(seed = x$seed, model = "Occurrence")  # Add seed and model columns
 }))
 
 # Combine both models
@@ -169,8 +169,8 @@ temp_plot_variability <- temp_summary_all %>%
   geom_point(data = filter(temp_summary_all, seed %in% param_target_seed),
              aes(fill = model), color = "black", size = 2.5, shape = 21, alpha=0.9) +
   coord_flip() +
-  scale_color_manual(values = c("Abundance" = "#b7001480", "Presence" = "#01c04c80")) +
-  scale_fill_manual(values = c("Abundance" = "#b70014", "Presence" = "#01c04c")) +
+  scale_color_manual(values = c("Abundance" = "#b7001480", "Occurrence" = "#01c04c80")) +
+  scale_fill_manual(values = c("Abundance" = "#b70014", "Occurrence" = "#01c04c")) +
   theme_bw() +
   ylab(bquote("pseudo-R"^2)) +
   xlab("Predictor") +
