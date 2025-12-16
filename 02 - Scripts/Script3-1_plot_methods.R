@@ -65,18 +65,30 @@ plots$maps$TotalCount
 
 ###Methods Plot
 #----------------------------#
+# Summarize electrofishing data by year and site
+temp_efish_summary <- data_habfish_pseudo %>%
+  group_by(PointID) %>%
+  summarise(Total.Count = sum(Total.Count, na.rm = TRUE),
+            .groups = 'drop') %>% 
+ left_join(.,
+           select(df_hab, PointID, lat, lon))
+temp_efish_summary
+
  plots$maps$LocationsMap <- ggplot()+
   geom_sf(data=shapefile, colour = "black", fill=NA, inherit.aes = FALSE)+
   #receivers
   geom_point(data = df_spawn_plot,
              aes(x = deploy_long, y = deploy_lat, fill = countfish, size=as.numeric(residence_median)),
-             shape=21)+
-  #efishing
-  geom_point(data = data_habfish_pseudo,
-             aes(x=lon, y=lat, colour = Total.Count), alpha=0.4, size=5, shape=18)+
-  #hab data
-  geom_point(data = data_hab,
-             aes(x=Start_Longitude, y=Start_Latitude), colour="black", size=1)+
+             shape=21, stroke=1.25)+
+  #efishing summary
+  geom_point(data = temp_efish_summary,
+             aes(x=lon, y=lat, colour = Total.Count), alpha=0.5, size=5, shape=18)+
+  # #efishing
+  # geom_point(data = data_habfish_pseudo,
+  #            aes(x=lon, y=lat, colour = Total.Count), alpha=0.4, size=5, shape=18)+
+  # #hab data
+  # geom_point(data = data_hab,
+  #            aes(x=Start_Longitude, y=Start_Latitude), colour="black", size=1)+
   #formatting
   scale_x_continuous(limits=c(min(data_hab$Start_Longitude)-0.01, max(data_hab$Start_Longitude)+0.01))+
   scale_y_continuous(limits=c(min(data_hab$Start_Latitude)-0.01, max(data_hab$Start_Latitude)+0.01))+
@@ -89,7 +101,8 @@ plots$maps$TotalCount
                                                title.hjust = 0.5,
                                                barwidth = 8,
                                                barheight = 0.5))+
-  scale_fill_viridis_c(option="A", begin=0.2,
+  scale_fill_viridis_c(#option="A",
+                       begin=0.2,
                        name="Fish per Receiver",
                        guide = guide_colorbar(order = 2,
                                              #title.position = "top",
@@ -103,6 +116,12 @@ plots$maps$TotalCount
                                             #title.position = "top",
                                             title.hjust = 0.5,
                                             nrow = 1))+
+  # Add north arrow and scale bar
+  ggspatial::annotation_north_arrow(location = "tr", which_north = "true",
+                                     pad_x = unit(0.2, "in"), pad_y = unit(0.2, "in"),
+                                     style = ggspatial::north_arrow_fancy_orienteering
+                                    )+
+  ggspatial::annotation_scale(location = "bl", width_hint = 0.3)+
   theme_classic()+
   theme(legend.position = "top",
         legend.box = "vertical",
