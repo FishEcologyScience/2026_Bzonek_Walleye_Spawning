@@ -264,58 +264,7 @@ rpt_behaviour_depth <- rpt(depth_mean ~ water_level + length_total + detcount_al
 summary(rpt_behaviour_depth)
 plot(rpt_behaviour_depth)
 
-### Save repeatability objects
-#----------------------------#
-# # Save all rpt_behaviour objects
-# saveRDS(rpt_behaviour_station, paste0("04 - Outputs/2025_09_03_GroupByYear/rpt_behaviour_station_", Sys.Date(), ".rds"))
-# saveRDS(rpt_behaviour_station_ratio, paste0("04 - Outputs/2025_09_03_GroupByYear/rpt_behaviour_station_ratio_", Sys.Date(), ".rds"))
-# saveRDS(rpt_behaviour_residence, paste0("04 - Outputs/2025_09_03_GroupByYear/rpt_behaviour_residence_", Sys.Date(), ".rds"))
-# saveRDS(rpt_behaviour_depth, paste0("04 - Outputs/2025_09_03_GroupByYear/rpt_behaviour_depth_", Sys.Date(), ".rds"))
-# cat("Saved all rpt_behaviour objects to 04 - Outputs/2025_09_03_GroupByYear/\n")
 
- 
-# ##### Analysze the data ##########################################----
-# #-------------------------------------------------------------#
-# library('partR2') #Variance partitioning in mixed-effects models
-# mod_behaviour1 <- lmer(station_count_ratio ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
-#                        data = df_behaviour)
-# summary(mod_behaviour1)
-# performance::icc(mod_behaviour1) 
-# performance::r2(mod_behaviour1)
-# performance::check_model(mod_behaviour1)
-# performance::model_performance(mod_behaviour1)
-# 
-# partR2::partR2(mod_behaviour1, 
-#                R2_type = "marginal", nboot=20,
-#                partvars = c("water_level", "length_total", "detcount"))
-#  
-#  
-#  
-#  
-#  
-#  ##### k Means Clustering #########################################----
-# #-------------------------------------------------------------#
-# set.seed(param_seed)
-# temp_km <- kmeans(select(df_behaviour_scaled, station_count:detcount_sum), centers = 3, nstart = 20)
-# 
-# df_behaviour_kmeans <- df_behaviour_scaled %>%
-#  select(station_count:detcount_sum) %>%
-#  na.omit() 
-#  
-# temp_kmeans4 <- kmeans(df_behaviour_kmeans, centers = 4)
-# temp_kmeans4$centers
-# temp_kmeans4$cluster
-# 
-# df_behaviour_kmeans$kmeans4 <-temp_kmeans4$cluster
-# 
-# ggplot(df_behaviour_kmeans, aes(x=station_count, y=station_count_ratio, colour=as.factor(kmeans4)))+
-#  geom_point(aes(shape=as.factor(kmeans4)), size=4)+
-#  labs(title=paste("k means clustering:", "Stations visited vs proportion of stations spawned", sep="\n"))
-# 
-
- 
- 
- 
  
  
 
