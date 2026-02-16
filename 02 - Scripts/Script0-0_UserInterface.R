@@ -30,6 +30,7 @@ source("02 - Scripts/Script0-1_load_packages.R")
 
 # Now use func_source_clean for remaining scripts
 func_source_clean("02 - Scripts/Script1-1_format_data_h.R", level = param_verbose)
+func_source_clean("02 - Scripts/Script1-1.2_format_data_efish_raw.R", level = param_verbose)
 func_source_clean("02 - Scripts/Script1-2_format_data_t.R", level = param_verbose)
 func_source_clean("02 - Scripts/Script1-3_process_data_t.R", level = param_verbose)
 

@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script1-0_format_survey_data
+## Script name: Script1-1.2_format_data_efish_raw
 ##
 ## Purpose of script:
 ##    Read and combine walleye spawning survey data from 2022-2024,
@@ -22,48 +22,13 @@
 
 ###Import survey data
 #----------------------------#
-#Read summarized efishing data
-data_efish_obs <- read.csv("01 - Data/HH_WalleyeSpawningSurvey_2022-2024_SummarizedObservations.csv")
-data_efish_fish <- read.csv("01 - Data/HH_WalleyeSpawningSurvey_2022-2024_SummarizedFishInfo2.csv")
-
-
 # Read individual survey files
 temp_survey_2022 <- read.csv("01 - Data/WalleyeSurveyTable/WE Spawn Survey Data - 2022 - Sample Info.csv")
 temp_survey_2023 <- read.csv("01 - Data/WalleyeSurveyTable/WE Spawn Survey Data 2023 - Sample Info.csv")
 temp_survey_2024 <- read.csv("01 - Data/WalleyeSurveyTable/WE Spawning Surveys 2024 - Sample Info.csv")
 
 
-#####Format efishing data for paper analysis #####################----
-#-------------------------------------------------------------#
-#Set dates
-data_efish_obs <- data_efish_obs %>% mutate(Date = as.Date(YMD, format = "%m/%d/%Y"))
-data_efish_fish <- data_efish_fish %>% mutate(Date = as.Date(YMD, format = "%m/%d/%Y"))
-str(data_efish_fish)
 
-
-###Plot spawning events
-#----------------------------#
-plots$methods$efish_full <- ggplot()+
-  geom_sf(data=shapefile, colour = "black", fill=NA, inherit.aes = FALSE)+
-  #efishing
-  geom_point(data = data_efish_obs,
-             aes(x=Long, y=Lat, size=Total.Count), colour="firebrick", alpha=0.5)+
-  #hab data
-  geom_point(data = data_hab,
-             aes(x=Start_Longitude, y=Start_Latitude), colour="burlywood", size=3, shape=21, stroke=1.5)+
-  #formatting
-  scale_x_continuous(limits=c(min(data_hab$Start_Longitude)-0.01, max(data_hab$Start_Longitude)+0.01))+
-  scale_y_continuous(limits=c(min(data_hab$Start_Latitude)-0.01, max(data_hab$Start_Latitude)+0.01))+
-  ylab("Latitude")+
-  xlab("Longitude")+
-  #ggtitle("All walleye (red) and habitat data (gold)")+
-  scale_fill_viridis_c()+
-  theme_classic()
-
-plots$methods$efish_full 
-
-
- 
 #####Format raw efishing data for supplementary figure #####################----
 #-------------------------------------------------------------#
 
