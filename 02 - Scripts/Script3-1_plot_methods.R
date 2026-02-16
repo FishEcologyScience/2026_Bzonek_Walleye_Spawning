@@ -249,26 +249,60 @@ plots$methods$Walleye
 rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in name
 
 
-### Occurrence by Year
-plots$maps$Walleye <- ggplot()+
+
+### Combined Walleye Occurrence Map
+#----------------------------#
+
+# Calculate common scale limits
+param_count_max <- max(c(data_habfish_pseudo$Total.Count, data_efish_obs$Total.Count), na.rm = TRUE)
+param_count_min <- min(c(data_habfish_pseudo$Total.Count, data_efish_obs$Total.Count), na.rm = TRUE)
+
+# Plot A: Habitat-matched sites
+temp_plot_A <- ggplot()+
   geom_sf(data=shapefile, colour = "black", fill=NA, inherit.aes = FALSE)+
-  #efishing
-  geom_point(data = data_habfish_pseudo, 
+  geom_point(data = data_habfish_pseudo,
              aes(x=lon, y=lat, size=Total.Count, colour = Total.Count), alpha=0.7, shape=18)+
-  #formatting
   scale_x_continuous(limits=c(min(data_hab$Start_Longitude)-0.01, max(data_hab$Start_Longitude)+0.01))+
   scale_y_continuous(limits=c(min(data_hab$Start_Latitude)-0.01, max(data_hab$Start_Latitude)+0.01))+
   ylab("Latitude")+
   xlab("Longitude")+
   facet_wrap(~Year, nrow=3)+
-  scale_colour_viridis_c(begin=0.2)+
-  scale_size_continuous(range = c(2, 7.5))+ 
-  theme(legend.position = "top")+
-  theme_classic()
+  scale_colour_viridis_c(begin=0.2, limits = c(param_count_min, param_count_max), name = "Total Count")+
+  scale_size_continuous(range = c(2, 7.5), limits = c(param_count_min, param_count_max), name = "Total Count")+
+  ggtitle("A. Habitat-Matched Sites")+
+  theme_classic()+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1))
 
+# Plot B: All electrofishing observations
+temp_plot_B <- ggplot()+
+  geom_sf(data=shapefile, colour = "black", fill=NA, inherit.aes = FALSE)+
+  geom_point(data = data_efish_obs,
+             aes(x=Long, y=Lat, size=Total.Count, colour = Total.Count), alpha=0.7, shape=18)+
+  scale_x_continuous(limits=c(min(data_hab$Start_Longitude)-0.01, max(data_hab$Start_Longitude)+0.01))+
+  scale_y_continuous(limits=c(min(data_hab$Start_Latitude)-0.01, max(data_hab$Start_Latitude)+0.01))+
+  ylab("Latitude")+
+  xlab("Longitude")+
+  facet_wrap(~Year, nrow=3)+
+  scale_colour_viridis_c(begin=0.2, limits = c(param_count_min, param_count_max), name = "Total Count")+
+  scale_size_continuous(range = c(2, 7.5), limits = c(param_count_min, param_count_max), name = "Total Count")+
+  ggtitle("B. All Survey Sites")+
+  theme_classic()+
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        axis.text.x = element_text(angle = 45, hjust = 1))
 
-plots$maps$Walleye
+# Combine with shared legend
+plots$maps$Efish <- (temp_plot_A | temp_plot_B) +
+  plot_layout(guides = "collect") &
+  theme(legend.position = "right")
 
+plots$maps$Efish
+
+# Cleanup
+rm(temp_plot_A, temp_plot_B, param_count_min, param_count_max)
+  
 
 
 

@@ -196,4 +196,11 @@ ggsave(paste0(param_output_dir, "/FigSY_Prop_WaterLevel.tiff"),
 ggsave(paste0(param_output_dir, "/FigSY_Prop_WaterLevel.jpeg"),
        plot = plots$advanced$spawning_summary$proportion_by_year_waterlevel, width = 7, height = 6, dpi = 400, units = "in")
 
-
+ 
+### SX: Full efishing dataset
+#----------------------------#
+plots$maps$Efish
+ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.tiff"),
+       plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")
+ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.jpeg"),
+       plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")

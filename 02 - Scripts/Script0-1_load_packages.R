@@ -54,4 +54,7 @@ theme_set(theme_classic()) #ggplot background
 options(scipen=999) #Drop scientific notation
 param_seed <- 1987 #Set seed for randomized analysis
 
-plots <- list() #Home for plots
+# Only create `plots` if it does not already exist
+if (!exists("plots", inherits = FALSE)) {
+  plots <- list()  # Home for plots
+} else{cat("list object 'plots' already exists")}
