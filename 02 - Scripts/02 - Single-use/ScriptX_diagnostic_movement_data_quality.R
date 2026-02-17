@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script10-X_Claude_movement_quality_report
+## Script name: ScriptX_diagnostic_movement_data_quality
 ##
 ## Purpose of script:
 ##    Analyze movement data quality and receiver usage patterns
@@ -187,21 +187,6 @@ for(check_name in names(temp_quality_checks)) {
   cat(paste0(check_name, ": ", temp_quality_checks[[check_name]], "\n"))
 }
 
-# Summary recommendations
-cat("\n=== RECOMMENDATIONS ===\n")
-
-if(nrow(temp_unmonitored_usage) > 0) {
-  cat("Consider adding monitoring to these high-activity unmonitored receivers:\n")
-  high_activity_stations <- temp_unmonitored_usage %>%
-    filter(total_movements >= quantile(temp_unmonitored_usage$total_movements, 0.75)) %>%
-    pull(To_station)
-  cat(paste(head(high_activity_stations, 5), collapse = ", "), "\n")
-}
-
-temp_monitoring_gaps <- temp_connection_summary %>%
-  filter(connection_type %in% c("monitored_to_unmonitored", "unmonitored_to_monitored")) %>%
-  pull(total_movements) %>%
-  sum()
 
 cat("Monitoring gap impact:", temp_monitoring_gaps, "movements involve unmonitored receivers\n")
 cat("This represents", round(temp_monitoring_gaps/nrow(df_movement)*100, 1), "% of all movements\n")

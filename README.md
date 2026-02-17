@@ -15,7 +15,7 @@ All scripts are sourced via `Script0-0_UserInterface.R`. Higher-numbered scripts
 
 ### Data Processing
 - `Script1-1_format_data_h.R` - Clean raw habitat and electrofishing data
-- `Script1-1.2_format_data_efish_raw.R` - Combine walleye spawning survey data 2022-2024
+- `Script1-1-1_format_data_efish.R` - Combine walleye spawning survey data 2022-2024
 - `Script1-2_format_data_t.R` - Import and format raw telemetry data
 - `Script1-3_process_data_t.R` - Filter, calculate movements, residency, and spawning events
 

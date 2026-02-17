@@ -34,7 +34,7 @@ source("02 - Scripts/Script0-1_load_packages.R")
 ### Core Data Processing
 #----------------------------#
 func_source_clean("02 - Scripts/Script1-1_format_data_h.R", level = param_verbose)       # Clean raw habitat and electrofishing data
-func_source_clean("02 - Scripts/Script1-1.2_format_data_efish_raw.R", level = param_verbose) # Combine walleye spawning survey data 2022-2024
+func_source_clean("02 - Scripts/Script1-1-1_format_data_efish.R", level = param_verbose)     # Combine walleye spawning survey data 2022-2024
 func_source_clean("02 - Scripts/Script1-2_format_data_t.R", level = param_verbose)       # Import and format raw telemetry data
 func_source_clean("02 - Scripts/Script1-3_process_data_t.R", level = param_verbose)      # Filter, calculate movements, residency, and spawning events
 

@@ -405,7 +405,7 @@ print(plots$behaviour$station_specialization)
 # )
 
 
-rpt_behaviour_specialization <- rpt(specialization_index_duration ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
+rpt_behaviour_specialization <- rptR::rpt(specialization_index_duration ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", data = df_rec_specialization, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
 summary(rpt_behaviour_specialization)

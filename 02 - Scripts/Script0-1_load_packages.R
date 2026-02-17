@@ -15,29 +15,37 @@
 ##   
 ## --------------------------------------------------------------#
 
-###Basic packages on CRAN
+###Install missing packages
 #----------------------------#
-library('adehabitatHR') #investigate homeranges NOTE: select function in dependency MASS conflicts with dplyr select()
-library('randomForest') #Original methodology
-library('ggmap') #google basemaps
-library('sf') #handle shapefiles, projections, and distance calculations
-library('lme4') #Mixed effects models; lmer, glmer
-library('tidyverse') #Basic organizing and plotting
-library('corrplot') #Plot variable correlations
-library('vegan') #Calculate diversity (for substrate)
-library('patchwork') #Add plots together
-library('ggridges') #Make ridges boxplot
-library('rptR') #Look at Intraclass Correlation Coefficients
-library('beepr') #Add warning chimes
-library('keyring') #Manage secrets such as google maps API
+param_required_packages <- c(
+  # Loaded via library()
+  "tidyverse",     #Basic organizing and plotting
+  "sf",            #handle shapefiles, projections, and distance calculations
+  "patchwork",     #Add plots together
+  "randomForest",  #Random forest models
+  # Called via :: notation
+  "adehabitatHR",  #investigate homeranges
+  "ggmap",         #google basemaps
+  "corrplot",      #Plot variable correlations
+  "vegan",         #Calculate diversity (for substrate)
+  "ggridges",      #Make ridges boxplot
+  "rptR",          #Look at Intraclass Correlation Coefficients
+  "beepr",         #Add warning chimes
+  "keyring"        #Manage secrets such as google maps API
+)
+temp_missing <- param_required_packages[!param_required_packages %in% installed.packages()[, "Package"]]
+if (length(temp_missing) > 0) {
+  cat("Installing missing packages:", paste(temp_missing, collapse = ", "), "\n")
+  install.packages(temp_missing)
+}
+rm(temp_missing)
 
-
-###Packages off CRAN
+###Load core packages
 #----------------------------#
-###Lab package - not needed in main workflow, just for network analysis
-#Only need to install during updates
-# devtools::install_github("pbzonek/telemetrytoolsFESL")
-#library('telemetrytoolsFESL')
+library('randomForest') #Random forest models
+library('sf')           #Handle shapefiles, projections, and distance calculations
+library('tidyverse')    #Basic organizing and plotting
+library('patchwork')    #Combine plots with + and / operators
 
 
 ###Source functions

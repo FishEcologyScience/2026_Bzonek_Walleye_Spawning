@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: ScriptX_Claude_index_raw_data
+## Script name: ScriptX_utility_index_telemetry_data
 ##
 ## Purpose of script:
 ##    Create an optimized, indexed version of data_det_raw for faster loading

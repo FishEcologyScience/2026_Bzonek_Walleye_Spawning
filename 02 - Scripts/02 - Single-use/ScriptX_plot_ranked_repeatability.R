@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script10-5_Claude_c_ranked_repeatability.R
+## Script name: ScriptX_plot_ranked_repeatability
 ##
 ## Purpose of script:
 ##    Create repeatability plots with conserved rankings across metrics

@@ -217,7 +217,7 @@ lm(Fork.Length~Year, data = data_habfish_raw) %>% summary()
 ###Fish count
 tempA <- data_habfish_raw %>%
  ggplot(aes(x = Total.Count, y = factor(Year), fill = factor(Year))) +  # Horizontal ridges by Year
- geom_density_ridges() +  # Adjust overlap with scale | scale = 1.5
+ ggridges::geom_density_ridges() +  # Adjust overlap with scale | scale = 1.5
  labs(y = "Year", x = "Total Count") +
  ggtitle("Total Walleye Observations")+
  scale_fill_manual(values = c("#f4a261", "#e76f51", "#9d4e3f"))+
@@ -226,7 +226,7 @@ tempA <- data_habfish_raw %>%
 ###Fish weight
 tempB <- data_habfish_raw %>%
  ggplot(aes(x = Weight, y = factor(Year), fill = factor(Year))) +  # Horizontal ridges by Year
- geom_density_ridges() +  # Adjust overlap with scale
+ ggridges::geom_density_ridges() +  # Adjust overlap with scale
  labs(y = "Year", x = "Mass (g)") +
  ggtitle("Walleye weight distribution")+
  scale_fill_manual(values = c("#f4a261", "#e76f51", "#9d4e3f"))+
@@ -235,7 +235,7 @@ tempB <- data_habfish_raw %>%
 ###Fish length
 tempC <- data_habfish_raw %>%
  ggplot(aes(x = Fork.Length, y = factor(Year), fill = factor(Year))) +  # Horizontal ridges by Year
- geom_density_ridges() +  # Adjust overlap with scale
+ ggridges::geom_density_ridges() +  # Adjust overlap with scale
  labs(y = "Year", x = "Fork Length (cm)") +
  ggtitle("Walleye fork length distribution")+
  scale_fill_manual(values = c("#f4a261", "#e76f51", "#9d4e3f"))+

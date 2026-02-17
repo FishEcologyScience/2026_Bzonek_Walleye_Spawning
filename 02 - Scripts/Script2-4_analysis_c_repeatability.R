@@ -38,7 +38,7 @@ temp_metrics <- data_det %>%
                                     proj4string(temp_group) <- CRS("+proj=longlat +datum=WGS84")
                                     
                                     # Calculate MCP for the group
-                                    temp_mcp <- mcp(temp_group, percent = 95, unout = "m2")
+                                    temp_mcp <- adehabitatHR::mcp(temp_group, percent = 95, unout = "m2")
                                     
                                     # Extract the MCP area (in square meters) as a numeric value
                                     as.numeric(temp_mcp$area)
@@ -62,7 +62,7 @@ temp_metrics_spawn <- df_spawn %>%
                                     proj4string(temp_group) <- CRS("+proj=longlat +datum=WGS84")
                                     
                                     # Calculate MCP for the group
-                                    temp_mcp <- mcp(temp_group, percent = 95, unout = "m2")
+                                    temp_mcp <- adehabitatHR::mcp(temp_group, percent = 95, unout = "m2")
                                     
                                     # Extract the MCP area (in square meters) as a numeric value
                                     as.numeric(temp_mcp$area)
@@ -235,7 +235,7 @@ rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in 
 ##### Analysze repeatability #####################################----
 #-------------------------------------------------------------#
 
-rpt_behaviour_station <- rpt(station_count_spawn ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
+rpt_behaviour_station <- rptR::rpt(station_count_spawn ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
                              #station_count_spawn ~ length_total + (1|animal_id),
                           grname = "animal_id", data = df_behaviour_scaled, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
@@ -243,14 +243,14 @@ summary(rpt_behaviour_station)
 plot(rpt_behaviour_station)
 
 
-rpt_behaviour_station_ratio <- rpt(station_count_ratio ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year), 
+rpt_behaviour_station_ratio <- rptR::rpt(station_count_ratio ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", data = df_behaviour_scaled, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
 summary(rpt_behaviour_station_ratio)
 plot(rpt_behaviour_station_ratio)
 
 
-rpt_behaviour_residence <- rpt(residence_mean ~ length_total + detcount_all_sum + (1|animal_id) + (1|year), 
+rpt_behaviour_residence <- rptR::rpt(residence_mean ~ length_total + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", 
                           data = filter(df_behaviour_scaled, SpawnBinary == TRUE), 
                           datatype = "Gaussian",
@@ -258,7 +258,7 @@ rpt_behaviour_residence <- rpt(residence_mean ~ length_total + detcount_all_sum 
 summary(rpt_behaviour_residence)
 plot(rpt_behaviour_residence)
 
-rpt_behaviour_depth <- rpt(depth_mean ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year), 
+rpt_behaviour_depth <- rptR::rpt(depth_mean ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", data = df_behaviour_scaled, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
 summary(rpt_behaviour_depth)

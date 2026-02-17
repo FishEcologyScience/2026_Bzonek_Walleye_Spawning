@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: plot_buffered_transect
+## Script name: ScriptX_plot_transect_habitat_buffer
 ##
 ## Purpose of script:
 ##    Buffer walleye survey transect lines to segments that fall

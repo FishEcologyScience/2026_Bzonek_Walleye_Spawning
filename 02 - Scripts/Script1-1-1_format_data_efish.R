@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script1-1.2_format_data_efish_raw
+## Script name: Script1-1-1_format_data_efish
 ##
 ## Purpose of script:
 ##    Read and combine walleye spawning survey data from 2022-2024,

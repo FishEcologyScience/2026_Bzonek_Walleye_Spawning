@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: diagnostic_compare_df_spawn
+## Script name: ScriptX_diagnostic_spawning_data_comparison
 ##
 ## Purpose of script:
 ##    Compare old vs new df_spawn to identify meaningful differences

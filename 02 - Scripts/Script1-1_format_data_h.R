@@ -93,7 +93,7 @@ df_hab <- data_hab %>%
 
 #Add substrate diversity
 df_hab$SubstrateDiversity <- df_hab %>% 
- select(Fine:Armourstone) %>% diversity(index="simp")
+ select(Fine:Armourstone) %>% vegan::diversity(index="simp")
 
 
 #Plot habitat data
