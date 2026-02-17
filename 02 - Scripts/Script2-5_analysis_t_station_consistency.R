@@ -130,9 +130,9 @@ for(station in temp_major_stations$station_no) {
         p_value = temp_rpt$P[1]
       )
       
-      cat("Station", station, "repeatability:", round(temp_rpt$R, 3), 
-          "(", round(temp_rpt$CI_emp[1], 3), "-", round(temp_rpt$CI_emp[2], 3), "), p =", 
-          round(temp_rpt$P[1], 4), "\n")
+      cat("Station", station, "repeatability:", round(unlist(temp_rpt$R)[1], 3),
+          "(", round(unlist(temp_rpt$CI_emp)[1], 3), "-", round(unlist(temp_rpt$CI_emp)[2], 3), "), p =",
+          round(unlist(temp_rpt$P)[1], 4), "\n")
       
     }, error = function(e) {
       cat("Error analyzing station", station, ":", e$message, "\n")
@@ -241,10 +241,10 @@ cat("  Effective stations: mean =", round(mean(df_rec_specialization$effective_s
     )
     
     cat("\nSpecialization index repeatability:\n")
-    cat("- R =", round(temp_rpt_specialization$R, 3), "\n")
-    cat("- 95% CI: (", round(temp_rpt_specialization$CI_emp[1], 3), "-", 
-        round(temp_rpt_specialization$CI_emp[2], 3), ")\n")
-    cat("- p =", round(temp_rpt_specialization$P[1], 4), "\n")
+    cat("- R =", round(unlist(temp_rpt_specialization$R)[1], 3), "\n")
+    cat("- 95% CI: (", round(unlist(temp_rpt_specialization$CI_emp)[1], 3), "-",
+        round(unlist(temp_rpt_specialization$CI_emp)[2], 3), ")\n")
+    cat("- p =", round(unlist(temp_rpt_specialization$P)[1], 4), "\n")
     
     plot(temp_rpt_specialization)
     
@@ -284,10 +284,10 @@ cat("  Effective stations: mean =", round(mean(df_rec_specialization$effective_s
     )
     
     cat("\nSpecialization index repeatability:\n")
-    cat("- R =", round(temp_rpt_specialization_duration$R, 3), "\n")
-    cat("- 95% CI: (", round(temp_rpt_specialization_duration$CI_emp[1], 3), "-", 
-        round(temp_rpt_specialization_duration$CI_emp[2], 3), ")\n")
-    cat("- p =", round(temp_rpt_specialization_duration$P[1], 4), "\n")
+    cat("- R =", round(unlist(temp_rpt_specialization_duration$R)[1], 3), "\n")
+    cat("- 95% CI: (", round(unlist(temp_rpt_specialization_duration$CI_emp)[1], 3), "-",
+        round(unlist(temp_rpt_specialization_duration$CI_emp)[2], 3), ")\n")
+    cat("- p =", round(unlist(temp_rpt_specialization_duration$P)[1], 4), "\n")
     
     plot(temp_rpt_specialization_duration)
     

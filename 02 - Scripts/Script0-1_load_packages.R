@@ -31,7 +31,10 @@ param_required_packages <- c(
   "ggridges",      #Make ridges boxplot
   "rptR",          #Look at Intraclass Correlation Coefficients
   "beepr",         #Add warning chimes
-  "keyring"        #Manage secrets such as google maps API
+  "keyring",       #Manage secrets such as google maps API
+  "ggExtra",       #Marginal density plots
+  "caret",         #Confusion matrices for RF validation
+  "pdp"            #Partial dependence plots for RF
 )
 temp_missing <- param_required_packages[!param_required_packages %in% installed.packages()[, "Package"]]
 if (length(temp_missing) > 0) {
