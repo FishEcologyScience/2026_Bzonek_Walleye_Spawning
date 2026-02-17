@@ -1,4 +1,4 @@
-# Walleye Spawning Habitat Selection and Behavioural Repeatability
+# 2026_Bzonek_Walleye_Spawning
 
 ## Overview
 Code and data processing pipeline supporting the manuscript:
@@ -47,6 +47,16 @@ source("02 - Scripts/Script0-0_UserInterface.R")
 - Additional packages (called via `::`): adehabitatHR, ggmap, corrplot, vegan, ggridges, rptR, ggExtra, caret, pdp, beepr, keyring
 - Data files in `01 - Data/`
 - Google Maps basemap: cached as `01 - Data/HHmap_basemap.rds` (included)
+
+## Citation
+If you use this code or data, please cite the associated publication:
+
+> Bzonek PA, Croft-White MV, Reddick DT, Turner NA, MacLeod MC, Cooke SJ, Brooks JL, Hasler C, Midwood JD. Habitat selection and behavioural repeatability during spawning in stocked Walleye (*Sander vitreus*) in Hamilton Harbour. *In review*.
+
+<!-- TODO: Update with journal name and DOI once published -->
+
+## License
+This project is licensed under the [MIT License](LICENSE). Copyright (c) 2026 His Majesty the King in Right of Canada, as represented by the Minister of Fisheries and Oceans.
 
 ## Author
 Paul Bzonek
