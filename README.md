@@ -1,5 +1,7 @@
 # 2026_Bzonek_Walleye_Spawning
 
+[![DOI](https://zenodo.org/badge/1104199933.svg)](https://doi.org/10.5281/zenodo.18675473)
+
 ## Overview
 Code and data processing pipeline supporting the manuscript:
 
@@ -60,3 +62,4 @@ This project is licensed under the [MIT License](LICENSE). Copyright (c) 2026 Hi
 
 ## Author
 Paul Bzonek
+Paul.Bzonek@dfo-mpo.gc.ca
