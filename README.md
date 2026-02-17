@@ -37,10 +37,9 @@ source("02 - Scripts/Script0-0_UserInterface.R")
 ```
 
 ## Requirements
-- R packages: tidyverse, randomForest, lme4, adehabitatHR, rptR, sf, corrplot, vegan, patchwork, ggridges, ggpmisc, paletteer
-- telemetrytoolsFESL package (`devtools::install_github("pbzonek/telemetrytoolsFESL")`)
+- R packages: tidyverse, randomForest, rptR, sf, 
 - Data files in `01 - Data/`
-- Google Maps basemap: cached as `01 - Data/HHmap_basemap.rds` (included). If regenerating, requires a Google API key stored via `keyring::key_set("google_api", username = "Jake")`
+- Google Maps basemap: cached as `01 - Data/HHmap_basemap.rds` (included). 
 
 ## Author
 Paul Bzonek
