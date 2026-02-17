@@ -7,7 +7,7 @@
 ##
 ## Dependencies:
 ##    - Script2-4_analysis_c_repeatability.R (df_behaviour)
-##    - Script10-1_Claude_t_station_consistency.R (df_rec_specialization)
+##    - Script2-5_analysis_t_station_consistency.R (df_rec_specialization)
 ##
 ## Author: Paul Bzonek [Claude]
 ##

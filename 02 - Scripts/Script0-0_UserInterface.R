@@ -22,13 +22,17 @@
 #----------------------------#
 param_verbose <- "minimal"  # Options: "debug", "full", "minimal", "silent"
 
+ 
 
-### Core Data Processing
-#----------------------------#
+##### Run project scripts ########################################----
+#-------------------------------------------------------------#
 # Load packages and helper functions first (must use standard source)
 source("02 - Scripts/Script0-1_load_packages.R")
 
 # Now use func_source_clean for remaining scripts
+
+### Core Data Processing
+#----------------------------#
 func_source_clean("02 - Scripts/Script1-1_format_data_h.R", level = param_verbose)
 func_source_clean("02 - Scripts/Script1-1.2_format_data_efish_raw.R", level = param_verbose)
 func_source_clean("02 - Scripts/Script1-2_format_data_t.R", level = param_verbose)
@@ -36,24 +40,20 @@ func_source_clean("02 - Scripts/Script1-3_process_data_t.R", level = param_verbo
 
 ### Primary Analysis Pipeline
 #----------------------------#
-# Habitat workflow
+# Habitat random forests workflow
 func_source_clean("02 - Scripts/Script2-1_analysis_h_habfish_RF.R", level = param_verbose)
-
-# Telemetry workflow
+# Telemetry spawning workflow
 func_source_clean("02 - Scripts/Script2-2_process_t_dataset.R", level = param_verbose)
-
-# Combined workflows
+# Combined workflows for repeatability
 func_source_clean("02 - Scripts/Script2-4_analysis_c_repeatability.R", level = param_verbose)
+# Spatial metrics for spawning behaviour
+func_source_clean("02 - Scripts/Script2-5_analysis_t_station_consistency.R", level = param_verbose)
 
 
-### Claude Analysis Suite
+### Extended Analysis
 #----------------------------#
-func_source_clean("02 - Scripts/Script10-1_Claude_t_station_consistency.R", level = param_verbose)
-# func_source_clean("02 - Scripts/Script10-2a_Claude_c_variation_behavioral.R", level = param_verbose)
-# func_source_clean("02 - Scripts/Script10-2b_Claude_c_variation_spawning.R", level = param_verbose)
-func_source_clean("02 - Scripts/Script10-3_Claude_t_spawning_summary.R", level = param_verbose)
-func_source_clean("02 - Scripts/Script10-4_Claude_t_spawning_proportion_by_hour.R", level = param_verbose)
-func_source_clean("02 - Scripts/Script10-5_Claude_c_ranked_repeatability.R", level = param_verbose)
+func_source_clean("02 - Scripts/Script2-6_analysis_t_spawning_summary.R", level = param_verbose)
+func_source_clean("02 - Scripts/Script2-7_analysis_t_spawning_proportion_by_hour.R", level = param_verbose)
 
 ### Visualization
 #----------------------------#

@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script5-7_Claude_station_preference_consistency
+## Script name: Script2-5_analysis_t_station_consistency
 ##
 ## Purpose of script: 
 ##    Analyze consistency of station preferences for individual fish

@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: ScriptX-X_Claude_spawning_proportion_by_hour
+## Script name: Script2-7_analysis_t_spawning_proportion_by_hour
 ##
 ## Purpose of script:
 ##    Analyze proportion of detections classified as spawning events by hour
