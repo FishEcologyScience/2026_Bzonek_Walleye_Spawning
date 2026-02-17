@@ -17,18 +17,20 @@
 
 ###Install missing packages
 #----------------------------#
+#Identify which pickages are used and how
 param_required_packages <- c(
   # Loaded via library()
   "tidyverse",     #Basic organizing and plotting
   "sf",            #handle shapefiles, projections, and distance calculations
   "patchwork",     #Add plots together
   "randomForest",  #Random forest models
-  # Called via :: notation
+  # Called via :: notation -> don't necessarily need to install if you'd rather avoid their usage
   "adehabitatHR",  #investigate homeranges
   "ggmap",         #google basemaps
   "corrplot",      #Plot variable correlations
   "vegan",         #Calculate diversity (for substrate)
   "ggridges",      #Make ridges boxplot
+  "ggspatial",     #Add map annotations   
   "rptR",          #Look at Intraclass Correlation Coefficients
   "beepr",         #Add warning chimes
   "keyring",       #Manage secrets such as google maps API
@@ -36,12 +38,15 @@ param_required_packages <- c(
   "caret",         #Confusion matrices for RF validation
   "pdp"            #Partial dependence plots for RF
 )
+
+#Install packages not yet on computer
 temp_missing <- param_required_packages[!param_required_packages %in% installed.packages()[, "Package"]]
 if (length(temp_missing) > 0) {
   cat("Installing missing packages:", paste(temp_missing, collapse = ", "), "\n")
   install.packages(temp_missing)
 }
-rm(temp_missing)
+
+rm(temp_missing) #cleanup
 
 ###Load core packages
 #----------------------------#
@@ -51,7 +56,7 @@ library('tidyverse')    #Basic organizing and plotting
 library('patchwork')    #Combine plots with + and / operators
 
 
-###Source functions
+###Source local functions
 #----------------------------#
 source("02 - Scripts/01 - Functions/Function1-1_JakesFunctions.R")
 source("02 - Scripts/01 - Functions/Function1-3_HelperFunctions.R")

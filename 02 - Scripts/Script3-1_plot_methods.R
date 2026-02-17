@@ -295,7 +295,7 @@ temp_plot_B <- ggplot()+
 
 # Combine with shared legend
 plots$maps$Efish <- (temp_plot_A | temp_plot_B) +
-  plot_layout(guides = "collect") &
+  plot_layout(guides = "collect") +
   theme(legend.position = "right")
 
 plots$maps$Efish
