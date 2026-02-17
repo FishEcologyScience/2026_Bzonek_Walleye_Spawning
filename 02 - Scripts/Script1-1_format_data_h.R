@@ -40,15 +40,6 @@ param_min_dist <- 25
 ###Project shapefile
 shapefile <- st_transform(shapefile, "WGS84") #Also try "EPSG:4326"; 'EPSG:32724'
 
-#Set map data
-# Retrieve Google API key from keyring (secure storage)
-# To set key initially, run once: keyring::key_set("google_api", username = "Jake")
-param_google_api_key <- keyring::key_get("google_api", username = "Jake")
-ggmap::register_google(key = param_google_api_key)
-HHmap <- ggmap::get_googlemap(center = c(lon=mean(data_hab$Start_Longitude), lat=mean(data_hab$Start_Latitude)),
-                       zoom = 13, scale = 4, size = c(720, 720),
-                       maptype = c("satellite"))
-
 #Format water level data
 data_waterlevel <- data_waterlevel %>% 
  dplyr::select(date=Date, year=Year, month=Month, lift_time = `Lift Time`, water_level = `W_depth(CP)`, air_temp = `Air Temp`,
