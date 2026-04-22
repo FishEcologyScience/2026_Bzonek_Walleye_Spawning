@@ -83,8 +83,36 @@ ggsave(paste0(param_output_dir, "/Fig4_BivariatePredictors.jpeg"),
 
 
 
-### Figure 5: Repeatability 
+### Figure 5: Repeatability
 #----------------------------#
+  #  ## REVISION - REVIEWER COMMENT 23 ──────────────────────────
+  # Add 25th / 50th / 75th percentile rank indicators to each panel.
+  # Each panel independently ranks fish, so N is constant across panels
+  # but the ranked individual at each percentile differs per metric.
+  temp_n_fish_repeat <- length(unique(df_behaviour$animal_id))
+  temp_p25r <- temp_n_fish_repeat * 0.25
+  temp_p50r <- temp_n_fish_repeat * 0.50
+  temp_p75r <- temp_n_fish_repeat * 0.75
+
+  temp_pct_layers <- list(
+    ggplot2::geom_vline(xintercept = temp_p25r, linetype = "dotted",  colour = "grey50", linewidth = 0.5),
+    ggplot2::geom_vline(xintercept = temp_p50r, linetype = "dashed",  colour = "grey40", linewidth = 0.6),
+    ggplot2::geom_vline(xintercept = temp_p75r, linetype = "longdash", colour = "grey30", linewidth = 0.5),
+    ggplot2::annotate("text", x = temp_p25r, y = Inf, label = "25th",
+                      vjust = 1.5, hjust = -0.1, size = 2.8, colour = "grey50"),
+    ggplot2::annotate("text", x = temp_p50r, y = Inf, label = "50th",
+                      vjust = 1.5, hjust = -0.1, size = 2.8, colour = "grey40"),
+    ggplot2::annotate("text", x = temp_p75r, y = Inf, label = "75th",
+                      vjust = 1.5, hjust = -0.1, size = 2.8, colour = "grey30")
+  )
+
+  plots$behaviour$station_count       <- plots$behaviour$station_count       + temp_pct_layers
+  plots$behaviour$station_proportion  <- plots$behaviour$station_proportion  + temp_pct_layers
+  plots$behaviour$station_specialization <- plots$behaviour$station_specialization + temp_pct_layers
+  plots$behaviour$residence_duration  <- plots$behaviour$residence_duration  + temp_pct_layers
+  plots$behaviour$spawning_depth      <- plots$behaviour$spawning_depth      + temp_pct_layers
+  #  ## END REVISION ──────────────────────────────────────────────
+
 ### Independent rankings
 plots$behaviour$FinalRepeatability <-
  with(plots$behaviour,

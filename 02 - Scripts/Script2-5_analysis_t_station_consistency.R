@@ -411,6 +411,21 @@ rpt_behaviour_specialization <- rptR::rpt(specialization_index_duration ~ water_
 summary(rpt_behaviour_specialization)
 plot(rpt_behaviour_specialization)
 
+  #  ## REVISION - REVIEWER COMMENT 32 ──────────────────────────
+  temp_spec_cor <- cor.test(df_rec_specialization$length_total,
+                             df_rec_specialization$specialization_index_duration,
+                             method = "spearman", exact = FALSE)
+
+  cat("--- Spearman Correlation: Total Length vs. Specialization Index ---\n")
+  cat("  rho =", round(temp_spec_cor$estimate, 2),
+      "  p =", round(temp_spec_cor$p.value, 4),
+      "  n =", sum(!is.na(df_rec_specialization$length_total) &
+                    !is.na(df_rec_specialization$specialization_index_duration)), "\n")
+
+  rm(temp_spec_cor)
+  cat("Cleanup complete.\n")
+  #  ## END REVISION ──────────────────────────────────────────────
+
 
 
 

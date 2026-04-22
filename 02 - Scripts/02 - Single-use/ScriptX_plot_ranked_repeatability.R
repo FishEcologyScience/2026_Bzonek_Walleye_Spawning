@@ -129,10 +129,28 @@ temp_sort_label <- case_when(
   TRUE ~ param_repeatability_sort
 )
 
+  #  ## REVISION - REVIEWER COMMENT 23 ──────────────────────────
+  temp_n_ranked <- length(unique(df_repeatability_long$global_rank))
+  temp_p25 <- temp_n_ranked * 0.25
+  temp_p50 <- temp_n_ranked * 0.50
+  temp_p75 <- temp_n_ranked * 0.75
+  #  ## END REVISION ──────────────────────────────────────────────
+
 plots$behaviour$ranked_repeatability <- df_repeatability_long %>%
   ggplot(aes(x = as.factor(global_rank), y = metric_value)) +
   geom_boxplot(outlier.shape = NA, colour = "darkgrey") +
   geom_jitter(alpha = 0.5, width = 0.2) +
+  #  ## REVISION - REVIEWER COMMENT 23 ──────────────────────────
+  geom_vline(xintercept = temp_p25, linetype = "dotted",  colour = "grey50", linewidth = 0.5) +
+  geom_vline(xintercept = temp_p50, linetype = "dashed",  colour = "grey40", linewidth = 0.6) +
+  geom_vline(xintercept = temp_p75, linetype = "longdash", colour = "grey30", linewidth = 0.5) +
+  annotate("text", x = temp_p25, y = Inf, label = "25th", vjust = 1.5,
+           hjust = -0.1, size = 2.8, colour = "grey50") +
+  annotate("text", x = temp_p50, y = Inf, label = "50th", vjust = 1.5,
+           hjust = -0.1, size = 2.8, colour = "grey40") +
+  annotate("text", x = temp_p75, y = Inf, label = "75th", vjust = 1.5,
+           hjust = -0.1, size = 2.8, colour = "grey30") +
+  #  ## END REVISION ──────────────────────────────────────────────
   facet_wrap(~metric_label, scales = "free_y", ncol = 1, strip.position = "left") +
   labs(x =  paste0("Individuals (ranked by mean ", temp_sort_label, ")"),
        y = NULL) +

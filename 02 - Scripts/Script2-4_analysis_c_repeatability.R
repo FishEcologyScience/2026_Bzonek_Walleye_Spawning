@@ -264,6 +264,29 @@ rpt_behaviour_depth <- rptR::rpt(depth_mean ~ water_level + length_total + detco
 summary(rpt_behaviour_depth)
 plot(rpt_behaviour_depth)
 
+  #  ## REVISION - REVIEWER COMMENT 32 ──────────────────────────
+  temp_size_metrics <- c("station_count", "station_count_ratio",
+                          "residence_mean", "depth_mean")
+
+  temp_summary_size_cor <- purrr::map_dfr(temp_size_metrics, function(metric) {
+    temp_test <- cor.test(df_behaviour$length_total, df_behaviour[[metric]],
+                           method = "spearman", exact = FALSE)
+    data.frame(
+      metric  = metric,
+      rho     = round(temp_test$estimate, 2),
+      p_value = round(temp_test$p.value, 4),
+      n       = sum(!is.na(df_behaviour$length_total) & !is.na(df_behaviour[[metric]]))
+    )
+  })
+
+  cat("--- Spearman Correlations: Total Length vs. Behaviour Metrics ---\n")
+  print(temp_summary_size_cor)
+
+  rm(list = ls(pattern = "^temp_summary_size"))
+  rm(temp_size_metrics)
+  cat("Cleanup complete.\n")
+  #  ## END REVISION ──────────────────────────────────────────────
+
 
  
  
