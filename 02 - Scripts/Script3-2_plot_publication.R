@@ -87,8 +87,6 @@ ggsave(paste0(param_output_dir, "/Fig4_BivariatePredictors.jpeg"),
 #----------------------------#
   #  ## REVISION - REVIEWER COMMENT 23 ──────────────────────────
   # Add 25th / 50th / 75th percentile rank indicators to each panel.
-  # Each panel independently ranks fish, so N is constant across panels
-  # but the ranked individual at each percentile differs per metric.
   temp_n_fish_repeat <- length(unique(df_behaviour$animal_id))
   temp_p25r <- temp_n_fish_repeat * 0.25
   temp_p50r <- temp_n_fish_repeat * 0.50
@@ -106,11 +104,19 @@ ggsave(paste0(param_output_dir, "/Fig4_BivariatePredictors.jpeg"),
                       vjust = 1.5, hjust = -0.1, size = 2.8, colour = "grey30")
   )
 
-  plots$behaviour$station_count       <- plots$behaviour$station_count       + temp_pct_layers
-  plots$behaviour$station_proportion  <- plots$behaviour$station_proportion  + temp_pct_layers
-  plots$behaviour$station_specialization <- plots$behaviour$station_specialization + temp_pct_layers
-  plots$behaviour$residence_duration  <- plots$behaviour$residence_duration  + temp_pct_layers
-  plots$behaviour$spawning_depth      <- plots$behaviour$spawning_depth      + temp_pct_layers
+  # Add geom_rug on y-axis of each panel (shows value distribution)
+  temp_rug <- geom_rug(sides = "r", outside=TRUE, position = "jitter",
+                       alpha = 0.4, linewidth = 0.4)
+  
+  # geom_rug outside plot bounds needs to disable coord clip
+  temp_coord <- coord_cartesian(clip = "off")
+  
+  plots$behaviour$station_count          <- plots$behaviour$station_count          + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$station_proportion     <- plots$behaviour$station_proportion     + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$station_specialization <- plots$behaviour$station_specialization + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$residence_duration     <- plots$behaviour$residence_duration     + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$spawning_depth         <- plots$behaviour$spawning_depth         + temp_pct_layers + temp_rug + temp_coord
+ 
   #  ## END REVISION ──────────────────────────────────────────────
 
 ### Independent rankings
@@ -232,3 +238,13 @@ ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.tiff"),
        plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")
 ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.jpeg"),
        plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")
+
+
+#####Cleanup #####################################################----
+#-------------------------------------------------------------#
+
+rm(list = ls(pattern = "^temp_"))
+# Defensive removal of orphaned for-loop variables from a prior session
+for (obj in c("d", "i", "p", "tr", "yvar")) if (exists(obj)) rm(list = obj)
+rm(obj)
+cat("Cleanup complete.\n")

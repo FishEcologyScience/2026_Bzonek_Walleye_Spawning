@@ -30,7 +30,7 @@
 # 
 # cat("\n=== COMMENT 36: HABITAT PARAMETER SELECTION RATIONALE ===\n\n")
 # 
-# temp_cor_vars <- dplyr::select(data_habfish_raw,
+# temp_cor_vars <- select(data_habfish_raw,
 #                                 Silt, Sand, Gravel, Cobble, Rubble, Boulder,
 #                                 SubstrateDiversity, Fetch, Slope, Light)
 # 
@@ -73,9 +73,9 @@
 cat("\n=== COMMENT 40: ANNUAL FISH SIZE AND SEX RATIO ===\n\n")
 
 temp_summary_fish_annual <- data_efish_fish %>%
-  dplyr::group_by(Year) %>%
-  dplyr::summarise(
-    n_fish       = dplyr::n(),
+  group_by(Year) %>%
+  summarise(
+    n_fish       = n(),
     FL_mean      = round(mean(Fork.Length,  na.rm = TRUE), 2),
     FL_sd        = round(sd(Fork.Length,    na.rm = TRUE), 2),
     TL_mean      = round(mean(Total.Length, na.rm = TRUE), 2),
@@ -83,7 +83,7 @@ temp_summary_fish_annual <- data_efish_fish %>%
     n_male       = sum(Sex == "M", na.rm = TRUE),
     n_female     = sum(Sex == "F", na.rm = TRUE),
     n_unknown    = sum(is.na(Sex)),
-    sex_ratio_MF = round(n_male / dplyr::if_else(n_female > 0,
+    sex_ratio_MF = round(n_male / if_else(n_female > 0,
                            as.numeric(n_female), NA_real_), 1),
     .groups = "drop"
   )
@@ -99,27 +99,24 @@ cat("Cleanup complete.\n\n")
 #----------------------------#
 # Compares detected signals to theoretically possible signals in
 # each spawning event window given the tag transmission interval.
-# IMPORTANT: confirm param_tag_interval_sec from
-#   HH_Fish_Workbook_Jun2024.xlsx (column: tag_model).
-#   Typical VEMCO V16: 45-90s random delay; mean = 67.5s.
 #-------------------------------------------------------------#
 
 cat("\n=== COMMENT 17: TAG SIGNAL DETECTION EFFICIENCY ===\n\n")
 
-param_tag_interval_sec <- 270  # Walleye V13 ping rate: 130 - 270
+param_tag_interval_sec <- 200  # Walleye V13 ping rate: 130 - 270
 
 temp_detect_eff <- data_spawn %>%
-  dplyr::group_by(animal_id, moveID) %>%
-  dplyr::summarise(
-    n_detected   = dplyr::n(),
+  group_by(animal_id, moveID) %>%
+  summarise(
+    n_detected   = n(),
     duration_min = as.numeric(difftime(max(detection_timestamp_EST),
                                         min(detection_timestamp_EST),
                                         units = "mins")),
     .groups = "drop"
   ) %>%
-  dplyr::mutate(
+  mutate(
     n_expected  = round((duration_min * 60) / param_tag_interval_sec),
-    detect_eff  = round(n_detected / dplyr::if_else(n_expected > 0,
+    detect_eff  = round(n_detected / if_else(n_expected > 0,
                           as.numeric(n_expected), NA_real_), 3)
   )
 
@@ -137,38 +134,82 @@ rm(param_tag_interval_sec)
 cat("Cleanup complete.\n\n")
 
 
-#####  Comment 43: Daytime Telemetry Diel Comparison  ###########----
-#----------------------------#
-# Compares spawning detection rates across diel periods (day, dawn,
-# dusk, night) using data from Script2-7 which retains all-day April
-# detections before the dusk/night filter is applied.
-# Note: 'Light' in RF models = nearshore light POLLUTION index
-#   (habitat covariate); it is independent of diel period.
-#-------------------------------------------------------------#
+# #####  Comment 43: Daytime Telemetry Diel Comparison  ###########----
+# #----------------------------#
+# # Compares spawning detection rates across diel periods (day, dawn,
+# # dusk, night) using data from Script2-7 which retains all-day April
+# # detections before the dusk/night filter is applied.
+# #-------------------------------------------------------------#
 
-cat("\n=== COMMENT 43: DAYTIME TELEMETRY DIEL COMPARISON ===\n\n")
 
 temp_summary_diel <- df_summary_plot_spawning_hourly %>%
-  dplyr::left_join(
-    df_SunCategory %>% dplyr::select(hour, SunCategory),
+  left_join(
+    df_SunCategory %>% 
+     mutate(hour = hour(Timestamp)) %>% 
+     select(hour, SunCategory),
     by = "hour"
   ) %>%
-  dplyr::group_by(SunCategory) %>%
-  dplyr::summarise(
+  group_by(SunCategory) %>%
+  summarise(
     total_detections = sum(total_detections),
     spawn_detections = sum(spawn_detections),
     prop_spawn       = round(spawn_detections / total_detections, 3),
     .groups = "drop"
   ) %>%
-  dplyr::arrange(dplyr::desc(prop_spawn))
+  arrange(desc(prop_spawn))
 
 cat("--- Spawning Proportion by Diel Period ---\n")
 print(temp_summary_diel)
-cat("\nNote: 'Light' in RF models is nearshore light pollution (1-4 scale),\n")
-cat("not diel light availability. These are independent variables.\n")
-cat("Low prop_spawn during 'day' supports the dusk/night filter justification.\n")
+
+
+
+
+#####  Comment 18: Tag Signal Detection Efficiency  ##############----
+#----------------------------#
+# Identify how many individuals skipped spawning for a year
+#-------------------------------------------------------------#
+
+# All fish-years with April presence (mirrors Script2-6 base)
+temp_all_fish_years <- data_det %>%
+  mutate(year = lubridate::year(detection_timestamp_utc)) %>%
+  group_by(animal_id, year) %>%
+  summarise(n_det = n(), .groups = "drop") %>%
+  filter(n_det >= 10)  # match Script2-6 threshold
+
+# Fish-years with confirmed spawning events
+temp_spawn_years <- data_spawn %>%
+  mutate(year = lubridate::year(detection_timestamp_utc)) %>%
+  distinct(animal_id, year) %>%
+  mutate(spawned = TRUE)
+
+# Classify each fish
+temp_fish_interannual <- temp_all_fish_years %>%
+  left_join(temp_spawn_years, by = c("animal_id", "year")) %>%
+  mutate(spawned = if_else(is.na(spawned), FALSE, spawned)) %>%
+  group_by(animal_id) %>%
+  summarise(
+    n_years_present = n(),
+    n_years_spawned = sum(spawned),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    category = case_when(
+      n_years_spawned == 0               ~ "never_spawned",
+      n_years_spawned == n_years_present ~ "every_year",
+      TRUE                               ~ "skipped_at_least_one"
+    )
+  )
+
+cat("--- Interannual Spawning (n =", nrow(temp_fish_interannual), "fish) ---\n")
+print(table(temp_fish_interannual$category))
+cat("\nPercentages:\n")
+print(round(prop.table(table(temp_fish_interannual$category)) * 100, 1))
+
+
+
 
 rm(list = ls(pattern = "^temp_"))
 cat("Cleanup complete.\n\n")
 
 cat("=== Script_Revisions_ManuscriptR1.R complete ===\n")
+
