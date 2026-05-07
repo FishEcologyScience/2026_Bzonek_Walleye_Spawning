@@ -48,6 +48,8 @@ func_source_clean("02 - Scripts/Script2-2_process_t_dataset.R", level = param_ve
 #func_source_clean("02 - Scripts/Script2-3_analysis_h_habfish_RF_sensitivity.R", level = param_verbose)
 # Combined workflows for repeatability
 func_source_clean("02 - Scripts/Script2-4_analysis_c_repeatability.R", level = param_verbose)
+# Length, age, and maturity projections from von Bertalanffy growth equation
+func_source_clean("02 - Scripts/Script2-9_analysis_c_maturity.R", level = param_verbose)
 # Spatial metrics for spawning behaviour
 func_source_clean("02 - Scripts/Script2-5_analysis_t_station_consistency.R", level = param_verbose)
 

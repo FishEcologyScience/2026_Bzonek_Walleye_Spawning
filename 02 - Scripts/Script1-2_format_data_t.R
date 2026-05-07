@@ -109,11 +109,12 @@ data_fish <- data_fish %>%
          length_standard = `Standard (mm)`,
          length_fork = `Fork (mm)`,
          length_total = `Total (mm)`,
-         mass = `Mass (g)`) %>%
+         mass = `Mass (g)`,
+         release_date = GLATOS_RELEASE_DATE_TIME) %>%
   mutate(length_standard = as.numeric(length_standard),
          length_fork = as.numeric(length_fork),
-         length_total = as.numeric(length_total))
-
+         length_total = as.numeric(length_total),
+         release_date = as.Date(release_date))
 
 
 ### Format receiver-habitat key

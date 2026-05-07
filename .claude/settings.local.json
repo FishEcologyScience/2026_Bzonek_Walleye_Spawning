@@ -16,7 +16,13 @@
       "Bash(mv:*)",
       "Bash(find:*)",
       "Bash(git log:*)",
-      "Bash(pdftotext:*)"
+      "Bash(pdftotext:*)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Administrator\\\\Documents\\\\01_claude_workflow\\\\01_directory_R_projects\\\\01_directory_GitHub\\\\2026_Bzonek_Walleye_Spawning\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(python3)",
+      "Bash(Rscript)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Administrator\\\\Documents\\\\01_claude_workflow\\\\01_directory_R_projects\\\\01_directory_GitHub\\\\2026_Bzonek_Walleye_Spawning\" -Directory)",
+      "Bash(Select-Object Name)"
     ],
     "deny": [],
     "ask": []
