@@ -48,8 +48,6 @@ func_source_clean("02 - Scripts/Script2-2_process_t_dataset.R", level = param_ve
 #func_source_clean("02 - Scripts/Script2-3_analysis_h_habfish_RF_sensitivity.R", level = param_verbose)
 # Combined workflows for repeatability
 func_source_clean("02 - Scripts/Script2-4_analysis_c_repeatability.R", level = param_verbose)
-# Length, age, and maturity projections from von Bertalanffy growth equation
-func_source_clean("02 - Scripts/Script2-9_analysis_c_maturity.R", level = param_verbose)
 # Spatial metrics for spawning behaviour
 func_source_clean("02 - Scripts/Script2-5_analysis_t_station_consistency.R", level = param_verbose)
 
@@ -58,10 +56,13 @@ func_source_clean("02 - Scripts/Script2-5_analysis_t_station_consistency.R", lev
 #----------------------------#
 func_source_clean("02 - Scripts/Script2-6_analysis_t_spawning_summary.R", level = param_verbose)             # Spawning proportion per fish per year
 func_source_clean("02 - Scripts/Script2-7_analysis_t_spawning_proportion_by_hour.R", level = param_verbose) # Spawning proportion by hour (diel patterns)
-func_source_clean("02 - Scripts/Script2-8_revisions_R1.R", level = param_verbose) # Spawning proportion by hour (diel patterns)
+
+### Revision Scripts
+#----------------------------#
+func_source_clean("02 - Scripts/Script4-1_misc_revisions.R", level = param_verbose)                  # Peer review revisions (R1)
+func_source_clean("02 - Scripts/Script4-2_analysis_c_maturity.R", level = param_verbose)             # Age and maturity from von Bertalanffy growth equation
 
 ### Visualization
 #----------------------------#
 func_source_clean("02 - Scripts/Script3-1_plot_methods.R", level = param_verbose)                    # Spatial methods figures for manuscript
 func_source_clean("02 - Scripts/Script3-2_plot_publication.R", level = param_verbose, beep_on_complete=T) # Publication-ready results figures
-

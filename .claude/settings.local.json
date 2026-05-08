@@ -22,7 +22,8 @@
       "Bash(python3)",
       "Bash(Rscript)",
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Administrator\\\\Documents\\\\01_claude_workflow\\\\01_directory_R_projects\\\\01_directory_GitHub\\\\2026_Bzonek_Walleye_Spawning\" -Directory)",
-      "Bash(Select-Object Name)"
+      "Bash(Select-Object Name)",
+      "Bash(git mv *)"
     ],
     "deny": [],
     "ask": []

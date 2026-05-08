@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script2-8_revisions_R1.R
+## Script name: Script4-1_misc_revisions
 ##
 ## Purpose of script:
 ##    Stand-alone code additions addressing peer review comments.
