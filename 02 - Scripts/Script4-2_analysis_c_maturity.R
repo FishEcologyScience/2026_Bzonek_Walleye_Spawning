@@ -28,6 +28,7 @@
 ### Von Bertalanffy growth parameters (fork length, mm)
 #----------------------------#
 # Values from Brooks et al. 2025
+
 # Lake Ontario model: "FL = 601.41 - e^(-0.31*(age+1.006))" 
 # FL = L_inf * (1 - exp(-K * (age - t0)))
 # where t0 = -1.006 so (age - t0) = (age + 1.006)
@@ -36,6 +37,7 @@
 # param_vb_t0   <- -1.006   # theoretical age at length zero (years)
 
 # Hamilton Harbour Model: "FL = 642.5 - e^(-0.375*(age+0.5))" 
+# FL = L_inf * (1 - exp(-K * (age - t0)))
 param_vb_linf <- 642.5   # asymptotic fork length (mm)
 param_vb_k    <- 0.375   # growth coefficient
 param_vb_t0   <- -0.5    # theoretical age at length zero (years)
@@ -60,6 +62,7 @@ cat("\n=== TAGGING SUMMARY ===\n")
 
 df_tag_summary <- data_fish %>%
   mutate(
+    # pmin caps FL just below L∞ to prevent log(0) NaN; fish at or above L∞ have their FL corrected downstream via pmax
     age_at_tag = -log(1 - pmin(length_fork, param_vb_linf - 0.01) / param_vb_linf) / param_vb_k + param_vb_t0,
     tag_year = year(release_date)  
     ) %>%
@@ -87,21 +90,21 @@ cat("\n=== PROJECTING GROWTH AND MATURITY PER FISH-YEAR ===\n")
 
 df_behaviour_maturity <- df_behaviour %>%
   left_join(
-    select(df_tag_summary, animal_id, tag_year, age_at_tag),
+    select(df_tag_summary, animal_id, tag_year, age_at_tag, length_fork),
     by = "animal_id"
   ) %>%
   mutate(
-    year_numeric    = as.integer(as.character(year)),
+    year_numeric    = as.integer(as.character(year)),  
     years_since_tag = year_numeric - tag_year,
-    age_pred     = round(age_at_tag + years_since_tag),
+    age_pred        = age_at_tag + years_since_tag,
     predicted_FL    = param_vb_linf * (1 - exp(-param_vb_k * (age_pred - param_vb_t0))),
-    predicted_FL    = round(predicted_FL, 1)
-        ) %>%
+    predicted_FL    = round(pmax(predicted_FL, length_fork), 1)  # prevents fish above L∞ from appearing to shrink toward the asymptote
+  ) %>%
   mutate(maturity = if_else(age_pred >= param_maturity_age, "mature", "immature")) %>%
   left_join(
     df_rec_specialization %>%
       select(animal_id, year, specialization_index_duration) %>%
-      mutate(year = as.numeric(as.character(year))),
+      mutate(year = as.numeric(as.character(year))),  # df_rec_specialization$year is a factor; coerce via character to match df_behaviour's numeric year
     by = c("animal_id", "year")
   )
 
@@ -177,6 +180,7 @@ temp_spawn_flag <- data_spawn %>%
 ### Build trajectory data (three separate layers)
 #----------------------------#
 # Lines: tag year (observed FL) + detected years (predicted FL), one y per fish-year
+# Tag year rows placed first in bind_rows so distinct() retains observed FL if tag year overlaps a detected spawning year
 temp_traj_lines <- bind_rows(
   df_tag_summary %>%
     transmute(animal_id, year = tag_year, FL = length_fork, tag_year),
@@ -192,7 +196,7 @@ temp_traj_circles <- df_behaviour_maturity %>%
   select(animal_id, year = year_numeric, FL = predicted_FL, tag_year) %>%
   left_join(temp_spawn_flag, by = c("animal_id", "year")) %>%
   mutate(
-    point_type   = if_else(!is.na(spawned), "spawning", "present"),
+    point_type   = if_else(!is.na(spawned), "spawning", "present"),  # left_join gives NA (not FALSE) for non-spawning years
     tag_year_fct = as.factor(tag_year)
   )
 
@@ -201,23 +205,36 @@ temp_traj_diamonds <- df_tag_summary %>%
   transmute(animal_id, year = tag_year, FL = length_fork,
             tag_year_fct = as.factor(tag_year))
 
+
 ### Plot
 #----------------------------#
 plots$behaviour$growth_trajectory <-
   ggplot() +
   geom_line(
     data = temp_traj_lines,
-    aes(x = year, y = FL, group = animal_id, colour = tag_year_fct),
+    aes(x = year, y = FL, group = animal_id, colour = tag_year_fct, 
+        # text aes is ignored by ggplot2; read by ggplotly() as tooltip
+        text = paste0("ID: ", animal_id, "<br>Tag year: ", tag_year)),  
     linewidth = 0.9, alpha = 0.5
   ) +
   geom_point(
     data = temp_traj_circles,
-    aes(x = year, y = FL, colour = tag_year_fct, shape = point_type),
+    aes(x = year, y = FL, colour = tag_year_fct, shape = point_type,
+        # text aes is ignored by ggplot2; read by ggplotly() as tooltip
+        text = paste0("ID: ", animal_id,
+                      "<br>Year: ", year,
+                      "<br>FL (pred): ", round(FL, 0), " mm",
+                      "<br>Tag year: ", tag_year,
+                      "<br>", point_type)),
     size = 3
   ) +
   geom_point(
     data = temp_traj_diamonds,
-    aes(x = year, y = FL, colour = tag_year_fct),
+    aes(x = year, y = FL, colour = tag_year_fct,
+        # text aes is ignored by ggplot2; read by ggplotly() as tooltip
+        text = paste0("ID: ", animal_id,
+                      "<br>Tag year: ", year,
+                      "<br>FL (measured): ", round(FL, 0), " mm")),
     shape = 18, size = 2
   ) +
   scale_shape_manual(values = c("spawning" = 16, "present" = 1)) +
@@ -228,14 +245,14 @@ plots$behaviour$growth_trajectory <-
   theme_classic()
 
 print(plots$behaviour$growth_trajectory)
-ggplotly(plots$behaviour$growth_trajectory)
-cat("Plot stored: plots$behaviour$growth_trajectory\n")
+plotly::ggplotly(plots$behaviour$growth_trajectory, tooltip = "text")
+
 
 ### Second plot: age trajectory coloured by tag year
 #----------------------------#
 temp_age_lines <- bind_rows(
   df_tag_summary %>%
-    transmute(animal_id, year = tag_year, age = round(age_at_tag), tag_year),
+    transmute(animal_id, year = tag_year, age = age_at_tag, tag_year),
   df_behaviour_maturity %>%
     select(animal_id, year = year_numeric, age = age_pred, tag_year)
 ) %>%
@@ -253,7 +270,7 @@ temp_age_circles <- df_behaviour_maturity %>%
   select(-spawned)
 
 temp_age_diamonds <- df_tag_summary %>%
-  transmute(animal_id, year = tag_year, age = round(age_at_tag),
+  transmute(animal_id, year = tag_year, age = age_at_tag,
             tag_year_fct = as.factor(tag_year))
 
 plots$behaviour$growth_trajectory_age <-
@@ -286,15 +303,14 @@ plots$behaviour$growth_trajectory_age <-
 plots$behaviour$growth_trajectory_combined <-
   plots$behaviour$growth_trajectory /
   plots$behaviour$growth_trajectory_age +
-  patchwork::plot_layout(guides = "collect")
+  patchwork::plot_layout(guides = "collect")  # merges the shared Tag Year legend from both panels into one
 
 print(plots$behaviour$growth_trajectory_combined)
-cat("Plots stored: plots$behaviour$growth_trajectory_age, growth_trajectory_combined\n")
 
 
 #####Cleanup #####################################################----
 #-------------------------------------------------------------#
 
 rm(list = ls(pattern = "^temp_"))
-rm(df_tag_summary, param_vb_linf, param_vb_k, param_vb_t0, param_maturity_age)
+rm(df_tag_summary, param_vb_linf, param_vb_k, param_vb_t0, param_maturity_age)  # df_behaviour_maturity is retained for downstream use
 cat("Cleanup complete.\n")
