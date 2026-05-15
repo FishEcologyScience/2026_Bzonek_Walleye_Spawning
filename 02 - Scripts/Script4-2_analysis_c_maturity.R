@@ -25,23 +25,6 @@
 #####Parameters ##################################################----
 #-------------------------------------------------------------#
 
-### Von Bertalanffy growth parameters (fork length, mm)
-#----------------------------#
-# Values from Brooks et al. 2025
-
-# Lake Ontario model: "FL = 601.41 - e^(-0.31*(age+1.006))" 
-# FL = L_inf * (1 - exp(-K * (age - t0)))
-# where t0 = -1.006 so (age - t0) = (age + 1.006)
-# param_vb_linf <- 601.41   # asymptotic fork length (mm)
-# param_vb_k    <- 0.31     # growth coefficient
-# param_vb_t0   <- -1.006   # theoretical age at length zero (years)
-
-# Hamilton Harbour Model: "FL = 642.5 - e^(-0.375*(age+0.5))" 
-# FL = L_inf * (1 - exp(-K * (age - t0)))
-param_vb_linf <- 642.5   # asymptotic fork length (mm)
-param_vb_k    <- 0.375   # growth coefficient
-param_vb_t0   <- -0.5    # theoretical age at length zero (years)
-
 ### Age-maturity threshold
 #----------------------------#
 # Males mature at age 2; population assumed predominantly male.
@@ -54,18 +37,9 @@ param_maturity_age <- 2L
 
 cat("\n=== TAGGING SUMMARY ===\n")
 
-### Back-calculate age at capture using VB inverse
+### Tagging summary (age_at_tag and tag_year computed in Script1-2)
 #----------------------------#
-# Inverse of FL = L_inf * (1 - exp(-K * (age - t0))):
-# age = -log(1 - FL / L_inf) / K + t0
-# Note: FL must be < L_inf (601.41 mm); values at or above produce NaN.
-
 df_tag_summary <- data_fish %>%
-  mutate(
-    # pmin caps FL just below L∞ to prevent log(0) NaN; fish at or above L∞ have their FL corrected downstream via pmax
-    age_at_tag = -log(1 - pmin(length_fork, param_vb_linf - 0.01) / param_vb_linf) / param_vb_k + param_vb_t0,
-    tag_year = year(release_date)  
-    ) %>%
   select(animal_id, release_date, tag_year, length_fork, age_at_tag) %>%
   filter(animal_id %in% unique(data_det$animal_id))
 
@@ -83,23 +57,10 @@ cat("FL at tag (mm):   mean =", round(mean(df_tag_summary$length_fork, na.rm = T
     "  SD =", round(sd(df_tag_summary$length_fork, na.rm = TRUE), 0), "\n")
 
 
-#####Per Fish-Year Growth Projection #############################----
+#####Build df_behaviour_maturity #################################----
 #-------------------------------------------------------------#
-
-cat("\n=== PROJECTING GROWTH AND MATURITY PER FISH-YEAR ===\n")
-
+# predicted_FL, age_pred, tag_year, age_at_tag are already in df_behaviour 
 df_behaviour_maturity <- df_behaviour %>%
-  left_join(
-    select(df_tag_summary, animal_id, tag_year, age_at_tag, length_fork),
-    by = "animal_id"
-  ) %>%
-  mutate(
-    year_numeric    = as.integer(as.character(year)),  
-    years_since_tag = year_numeric - tag_year,
-    age_pred        = age_at_tag + years_since_tag,
-    predicted_FL    = param_vb_linf * (1 - exp(-param_vb_k * (age_pred - param_vb_t0))),
-    predicted_FL    = round(pmax(predicted_FL, length_fork), 1)  # prevents fish above L∞ from appearing to shrink toward the asymptote
-  ) %>%
   mutate(maturity = if_else(age_pred >= param_maturity_age, "mature", "immature")) %>%
   left_join(
     df_rec_specialization %>%
@@ -116,9 +77,6 @@ cat("Predicted FL range:",
 
 #####Behaviour Correlations ######################################----
 #-------------------------------------------------------------#
-
-cat("\n=== BEHAVIOUR CORRELATIONS ===\n")
-
 temp_behav_metrics <- c("station_count", "station_count_ratio",
                         "residence_mean", "depth_mean",
                         "specialization_index_duration")
@@ -145,9 +103,6 @@ print(temp_cor_predicted_FL)
 
 #####Annual Summary ##############################################----
 #-------------------------------------------------------------#
-
-cat("\n=== ANNUAL SUMMARY ===\n")
-
 temp_annual_summary <- df_behaviour_maturity %>%
   group_by(year) %>%
   summarise(
@@ -167,9 +122,6 @@ print(temp_annual_summary)
 
 #####Growth Trajectory Plot ######################################----
 #-------------------------------------------------------------#
-
-cat("\n=== GROWTH TRAJECTORY PLOT ===\n")
-
 ### Spawning indicator per fish-year
 #----------------------------#
 temp_spawn_flag <- data_spawn %>%
@@ -312,5 +264,5 @@ print(plots$behaviour$growth_trajectory_combined)
 #-------------------------------------------------------------#
 
 rm(list = ls(pattern = "^temp_"))
-rm(df_tag_summary, param_vb_linf, param_vb_k, param_vb_t0, param_maturity_age)  # df_behaviour_maturity is retained for downstream use
+rm(df_tag_summary, param_maturity_age)  # df_behaviour_maturity is retained for downstream use
 cat("Cleanup complete.\n")

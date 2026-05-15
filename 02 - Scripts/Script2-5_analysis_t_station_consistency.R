@@ -6,7 +6,7 @@
 ##    across years using spawning detection data. Combines station 
 ##    usage proportion analysis with specialization indices.
 ##
-## Author: Paul Bzonek [Claude]
+## Author: Paul Bzonek 
 ##
 ## Date Created: 2025-01-05
 ##
@@ -106,13 +106,13 @@ for(station in temp_major_stations$station_no) {
     ungroup() %>%
     # Add covariates
     left_join(data_waterlevel, by = join_by(year)) %>%
-    left_join(select(data_fish, animal_id, length_total), by = join_by(animal_id))
+    left_join(select(df_behaviour, animal_id, year, predicted_FL, length_fork), by = join_by(animal_id, year))
   
   if(nrow(temp_station_data) >= 10 && n_distinct(temp_station_data$animal_id) >= 3) {
     
     tryCatch({
       temp_rpt <- rptR::rpt(
-        station_proportion_detections ~ water_level + length_total + (1|animal_id) + (1|year),
+        station_proportion_detections ~ water_level + predicted_FL + (1|animal_id) + (1|year),
         grname = "animal_id", 
         data = temp_station_data, 
         datatype = "Gaussian",
@@ -186,8 +186,7 @@ df_rec_specialization <- temp_station_usage %>%
   ) %>%
   # Add fish and environmental data
   left_join(data_waterlevel, by = join_by(year)) %>%
-  left_join(select(data_fish, animal_id, length_total), by = join_by(animal_id)) %>% 
-  left_join(select(df_behaviour, detcount_all_sum, animal_id, year), by = join_by(animal_id, year))
+  left_join(select(df_behaviour, animal_id, year, predicted_FL, length_fork, detcount_all_sum), by = join_by(animal_id, year))
  
 
 cat("Specialization summary:\n")
@@ -232,7 +231,7 @@ cat("  Effective stations: mean =", round(mean(df_rec_specialization$effective_s
   # Test repeatability of specialization indices
   tryCatch({
     temp_rpt_specialization <- rptR::rpt(
-      specialization_index ~ water_level + length_total + (1|animal_id) + (1|year),
+      specialization_index ~ water_level + predicted_FL + (1|animal_id) + (1|year),
       grname = "animal_id",
       data = filter(df_rec_specialization, !is.na(specialization_index), !is.infinite(specialization_index)),
       datatype = "Gaussian",
@@ -275,7 +274,7 @@ cat("  Effective stations: mean =", round(mean(df_rec_specialization$effective_s
   # Test repeatability of specialization indices by duration
   tryCatch({
     temp_rpt_specialization_duration <- rptR::rpt(
-      specialization_index_duration ~ water_level + length_total + (1|animal_id) + (1|year),
+      specialization_index_duration ~ water_level + predicted_FL + (1|animal_id) + (1|year),
       grname = "animal_id",
       data = filter(df_rec_specialization, !is.na(specialization_index_duration), !is.infinite(specialization_index_duration)),
       datatype = "Gaussian",
@@ -405,21 +404,21 @@ print(plots$behaviour$station_specialization)
 # )
 
 
-rpt_behaviour_specialization <- rptR::rpt(specialization_index_duration ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
+rpt_behaviour_specialization <- rptR::rpt(specialization_index_duration ~ water_level + predicted_FL + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", data = df_rec_specialization, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
 summary(rpt_behaviour_specialization)
 plot(rpt_behaviour_specialization)
 
   #  ## REVISION - REVIEWER COMMENT 32 ──────────────────────────
-  temp_spec_cor <- cor.test(df_rec_specialization$length_total,
+  temp_spec_cor <- cor.test(df_rec_specialization$predicted_FL,
                              df_rec_specialization$specialization_index_duration,
                              method = "spearman", exact = FALSE)
 
   cat("--- Spearman Correlation: Total Length vs. Specialization Index ---\n")
   cat("  rho =", round(temp_spec_cor$estimate, 2),
       "  p =", round(temp_spec_cor$p.value, 4),
-      "  n =", sum(!is.na(df_rec_specialization$length_total) &
+      "  n =", sum(!is.na(df_rec_specialization$predicted_FL) &
                     !is.na(df_rec_specialization$specialization_index_duration)), "\n")
 
   rm(temp_spec_cor)

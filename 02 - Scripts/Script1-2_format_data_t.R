@@ -101,8 +101,23 @@ data_rec_locs_raw <- data_rec_locs_raw %>%
 
 
 
-### Format fish data
+### Format receiver-habitat key
 #----------------------------#
+df_key <- df_key %>%
+  mutate(station_no = as.factor(station),
+         transect = as.factor(transect))
+
+
+
+### Add supplementary data (sun position)
+#----------------------------#
+setDT(df_SunCategory)
+
+
+
+##### Format fish data ###########################################----
+#-------------------------------------------------------------#
+
 data_fish <- data_fish %>%
   filter(COMMON_NAME_E == "Walleye", !is.na(`Pinger Full ID`)) %>%
   select(animal_id = `Pinger Full ID`,
@@ -116,17 +131,48 @@ data_fish <- data_fish %>%
          length_total = as.numeric(length_total),
          release_date = as.Date(release_date))
 
+#Interpolate fork length for missing cells (9/93 fish)
+#TL = 1.05 x FL -> FL= 0.952 X TL
+#Ref:
+     #https://publications.gc.ca/collections/collection_2023/mpo-dfo/fs97-4/Fs97-4-1449-eng.pdf
+     #Bond, W.A., R.W. Moshenko, and G. Low. 1978. 
+     #An investigation of the walleye, Stizostedion vitreum vitreum (Mitchill), 
+     #from the sport fishery of the Hay River, Northwest Territories, 1975. 
+     #Fisheries and Marine Service Manuscript Report 1449. 
+     #Department of Fisheries and the Environment, Western Region, Winnipeg, Manitoba.
+data_fish <- data_fish %>%
+ mutate(length_fork = case_when(is.na(length_fork) ~ length_total*0.952,
+                                TRUE ~ length_fork))
 
-### Format receiver-habitat key
+
+
+
+
+#  ## REVISION - Predict annual fork length with age-length key ──────────────────────────
+### Von Bertalanffy growth parameters (fork length, mm)
 #----------------------------#
-df_key <- df_key %>%
-  mutate(station_no = as.factor(station),
-         transect = as.factor(transect))
+# Values from Brooks et al. 2025
 
+# Lake Ontario model: "FL = 601.41 - e^(-0.31*(age+1.006))"
+# FL = L_inf * (1 - exp(-K * (age - t0)))
+# where t0 = -1.006 so (age - t0) = (age + 1.006)
+# temp_vb_linf <- 601.41   # asymptotic fork length (mm)
+# temp_vb_k    <- 0.31     # growth coefficient
+# temp_vb_t0   <- -1.006   # theoretical age at length zero (years)
 
+# Hamilton Harbour Model: "FL = 642.5 - e^(-0.375*(age+0.5))"
+# FL = L_inf * (1 - exp(-K * (age - t0)))
+temp_vb_linf <- 642.5   # asymptotic fork length (mm)
+temp_vb_k    <- 0.375   # growth coefficient
+temp_vb_t0   <- -0.5    # theoretical age at length zero (years)
 
-### Add supplementary data (sun position)
-#----------------------------#
-setDT(df_SunCategory)
+data_fish <- data_fish %>%
+  mutate(
+    tag_year   = lubridate::year(release_date),
+    # pmin caps FL just below L∞ to prevent log(0) NaN; corrected downstream via pmax
+    age_at_tag = -log(1 - pmin(length_fork, temp_vb_linf - 0.01) / temp_vb_linf) / temp_vb_k + temp_vb_t0
+  )
+#  ## END REVISION ──────────────────────────────────────────────────────────────
 
 cat("\nScript1-2 complete: Raw data imported and formatted\n")
+rm(list = ls(pattern = "^temp_"))
