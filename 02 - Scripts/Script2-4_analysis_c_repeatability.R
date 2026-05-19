@@ -20,8 +20,11 @@
 ##   2025-01-11: Renamed from Script2-Y_repeatability_telemetry.R
 ## --------------------------------------------------------------#
 
-# Grab movement metrics
+### Set analysis parameters
+#----------------------------#
+param_min_age_beh <- 2
 
+# Grab movement metrics
 #####Minimum convex polygon values ###############################----
 #-------------------------------------------------------------#
 
@@ -127,8 +130,8 @@ df_behaviour <- df_behaviour %>%
         SpawnBinary = case_when(is.na(detcount_sum)~FALSE,
                                 detcount_sum == 0 ~ FALSE,
                                 TRUE ~ TRUE),
-        length_total = as.numeric(length_total)) %>% 
- filter(length_total > 400) %>% 
+        length_total = as.numeric(length_total)) %>%
+ #filter(length_total > 400) %>% Removing as we now have the age threshold
  ungroup()
 
 
@@ -162,7 +165,8 @@ df_behaviour <- df_behaviour %>%
     age_pred        = age_at_tag + years_since_tag,
     predicted_FL    = temp_vb_linf * (1 - exp(-temp_vb_k * (age_pred - temp_vb_t0))),
     predicted_FL    = round(pmax(predicted_FL, length_fork), 1)  # prevents fish above L∞ from appearing to shrink toward the asymptote
-  )
+  ) %>%
+  filter(age_pred > param_min_age_beh)  # retain mature fish-years only (males mature at age 2)
 
 #  ## END REVISION ──────────────────────────────────────────────────────────────
   

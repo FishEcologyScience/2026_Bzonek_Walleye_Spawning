@@ -41,7 +41,9 @@ cat("\n=== TAGGING SUMMARY ===\n")
 #----------------------------#
 df_tag_summary <- data_fish %>%
   select(animal_id, release_date, tag_year, length_fork, age_at_tag) %>%
-  filter(animal_id %in% unique(data_det$animal_id))
+  filter(animal_id %in% unique(df_behaviour$animal_id))
+#write.csv(df_tag_summary, "04 - Outputs/2026-05-19_tagging_age_summary.csv")
+
 
 cat("Fish in tagging summary:", nrow(df_tag_summary),
     "(filtered to fish detected in April telemetry window)\n")
@@ -116,6 +118,7 @@ temp_annual_summary <- df_behaviour_maturity %>%
     .groups = "drop"
   )
 
+#write.csv(temp_annual_summary, "04 - Outputs/2026-05-19_annual_fish_summary.csv")
 cat("--- Predicted Age and FL by Study Year ---\n")
 print(temp_annual_summary)
 
@@ -264,5 +267,5 @@ print(plots$behaviour$growth_trajectory_combined)
 #-------------------------------------------------------------#
 
 rm(list = ls(pattern = "^temp_"))
-rm(df_tag_summary, param_maturity_age)  # df_behaviour_maturity is retained for downstream use
+rm(param_maturity_age)  # df_behaviour_maturity is retained for downstream use
 cat("Cleanup complete.\n")
