@@ -27,6 +27,7 @@ param_min_residence_hours <- 0.32
 param_max_lag_hours <- 2
 param_min_spawn_depth <- -2
 param_target_month <- "04"
+param_age_maturity <- 2L  # males mature at age 2; population assumed predominantly male
 
 
 
@@ -248,7 +249,7 @@ cat("Residency events identified:", nrow(df_residency), "\n")
 #####Create spawning datasets##################################----
 #-------------------------------------------------------------#
 
-### Create spawning dataset with depth filtering
+### Create spawning dataset with depth and age filtering
 #----------------------------#
 data_spawn <- df_movement %>%
   filter(moveID %in% df_residency$moveID) %>%
@@ -258,7 +259,9 @@ data_spawn <- df_movement %>%
   left_join(data_det, by = join_by(detection_timestamp_utc, animal_id, station_no)) %>%
   group_by(moveID) %>%
   mutate(meanDepth = mean(-sensor_value.Cal, na.rm = TRUE)) %>%
-  filter(meanDepth > param_min_spawn_depth) %>%  # Apply depth filter
+  filter(meanDepth > param_min_spawn_depth,
+         #Advance age past tagging year to retain yr3 fish tagged at yr2.
+         age_at_tag + (as.integer(year(detection_timestamp_utc)) - tag_year) > param_age_maturity) %>%
   select(-c(glatos_array, transmitter_codespace, tag_model, tag_serial_number,
             sex, release_group, glatos_caught_date, DST, tag_type)) %>%
   ungroup()

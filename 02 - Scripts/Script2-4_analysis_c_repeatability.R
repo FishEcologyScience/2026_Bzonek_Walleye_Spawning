@@ -20,10 +20,6 @@
 ##   2025-01-11: Renamed from Script2-Y_repeatability_telemetry.R
 ## --------------------------------------------------------------#
 
-### Set analysis parameters
-#----------------------------#
-param_min_age_beh <- 2
-
 # Grab movement metrics
 #####Minimum convex polygon values ###############################----
 #-------------------------------------------------------------#
@@ -166,7 +162,7 @@ df_behaviour <- df_behaviour %>%
     predicted_FL    = temp_vb_linf * (1 - exp(-temp_vb_k * (age_pred - temp_vb_t0))),
     predicted_FL    = round(pmax(predicted_FL, length_fork), 1)  # prevents fish above L∞ from appearing to shrink toward the asymptote
   ) %>%
-  filter(age_pred > param_min_age_beh)  # retain mature fish-years only (males mature at age 2)
+  filter(age_pred > param_age_maturity)  # retain mature fish-years only (males mature at age 2)
 
 #  ## END REVISION ──────────────────────────────────────────────────────────────
   

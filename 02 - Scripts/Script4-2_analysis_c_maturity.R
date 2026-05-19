@@ -27,8 +27,7 @@
 
 ### Age-maturity threshold
 #----------------------------#
-# Males mature at age 2; population assumed predominantly male.
-param_maturity_age <- 2L
+# param_age_maturity defined in Script1-3 (males mature at age 2; population assumed predominantly male)
 
 
 
@@ -63,7 +62,7 @@ cat("FL at tag (mm):   mean =", round(mean(df_tag_summary$length_fork, na.rm = T
 #-------------------------------------------------------------#
 # predicted_FL, age_pred, tag_year, age_at_tag are already in df_behaviour 
 df_behaviour_maturity <- df_behaviour %>%
-  mutate(maturity = if_else(age_pred >= param_maturity_age, "mature", "immature")) %>%
+  mutate(maturity = if_else(age_pred >= param_age_maturity, "mature", "immature")) %>%
   left_join(
     df_rec_specialization %>%
       select(animal_id, year, specialization_index_duration) %>%
@@ -267,5 +266,5 @@ print(plots$behaviour$growth_trajectory_combined)
 #-------------------------------------------------------------#
 
 rm(list = ls(pattern = "^temp_"))
-rm(param_maturity_age)  # df_behaviour_maturity is retained for downstream use
+# df_behaviour_maturity retained for downstream use; param_age_maturity defined in Script1-3
 cat("Cleanup complete.\n")
