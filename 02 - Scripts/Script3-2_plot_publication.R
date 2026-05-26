@@ -159,16 +159,6 @@ ggsave(paste0(param_output_dir, "/FigS1_LightIndex.jpeg"),
        plot = plots$maps$LightIndex, width = 7, height = 5.25, dpi = 400, units = "in")
 
 
-### S2: Walleye By Year
-#----------------------------#
-plots$maps$Walleye
-
-ggsave(paste0(param_output_dir, "/FigS4_WalleyeByYear.tiff"),
-       plot = plots$maps$Walleye, width = 7, height = 6, dpi = 400, units = "in")
-ggsave(paste0(param_output_dir, "/FigS4_WalleyeByYear.jpeg"),
-       plot = plots$maps$Walleye, width = 7, height = 6, dpi = 400, units = "in")
-
-
 ### S3: Variable Correlations 
 #----------------------------#
 temp_cor_matrix <- data_habfish_raw %>%
@@ -235,9 +225,18 @@ ggsave(paste0(param_output_dir, "/FigSY_Prop_WaterLevel.jpeg"),
 #----------------------------#
 plots$maps$Efish
 ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.tiff"),
-       plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")
+       plot = plots$maps$Efish, width = 7, height = 6, dpi = 400, units = "in")
 ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.jpeg"),
-       plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")
+       plot = plots$maps$Efish, width = 7, height = 6, dpi = 400, units = "in")
+ 
+
+### SY: Walleye growth curve
+#----------------------------#
+plots$behaviour$growth_trajectory_combined
+ggsave(paste0(param_output_dir, "/FigSY_Growth_Curve.tiff"),
+       plot = plots$behaviour$growth_trajectory_combined, width = 7, height = 8, dpi = 400, units = "in")
+ggsave(paste0(param_output_dir, "/FigSY_Growth_Curve.jpeg"),
+       plot = plots$behaviour$growth_trajectory_combined, width = 7, height = 8, dpi = 400, units = "in")
 
 
 #####Cleanup #####################################################----

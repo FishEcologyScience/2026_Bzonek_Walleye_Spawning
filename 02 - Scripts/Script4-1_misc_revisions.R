@@ -205,11 +205,56 @@ print(table(temp_fish_interannual$category))
 cat("\nPercentages:\n")
 print(round(prop.table(table(temp_fish_interannual$category)) * 100, 1))
 
+# Spawning events per fish per year (among fish-years with spawning)
+temp_events_per_fish_year <- data_spawn %>%
+  mutate(year = lubridate::year(detection_timestamp_utc)) %>%
+  group_by(animal_id, year) %>%
+  summarise(n_events = n_distinct(moveID), .groups = "drop")
+
+cat("\nSpawning events per fish per spawning year:\n")
+cat("  n fish-years:", nrow(temp_events_per_fish_year), "\n")
+cat("  Mean:", round(mean(temp_events_per_fish_year$n_events), 0),
+    " SD:", round(sd(temp_events_per_fish_year$n_events), 0), "\n")
+cat("  Range:", min(temp_events_per_fish_year$n_events), "-",
+    max(temp_events_per_fish_year$n_events), "\n")
+
 
 
 
 rm(list = ls(pattern = "^temp_"))
 cat("Cleanup complete.\n\n")
+
+#####  Comment 19: Receiver Spacing (nearest-neighbour distances)  ####----
+#----------------------------#
+# For each receiver station, compute the distance to its nearest neighbour.
+# Reports min and max of those nearest-neighbour distances across the array.
+# Uses unique station positions (one point per station_no, ignoring
+# deployment date ranges — spatial footprint of the array only).
+#-------------------------------------------------------------#
+
+cat("\n=== COMMENT 19: RECEIVER ARRAY SPACING ===\n\n")
+
+temp_stations_sf <- data_rec_locs_raw %>%
+  select(station_no, deploy_lat, deploy_long) %>%
+  distinct(station_no, .keep_all = TRUE) %>%
+  sf::st_as_sf(coords = c("deploy_long", "deploy_lat"), crs = 4326) %>%
+  sf::st_transform(crs = 32618)  # UTM Zone 18N (Hamilton Harbour)
+
+temp_dist_matrix <- sf::st_distance(temp_stations_sf)  # pairwise distances (metres)
+diag(temp_dist_matrix) <- NA  # exclude self-distances
+
+temp_nn_dist <- apply(temp_dist_matrix, 1, min, na.rm = TRUE)  # nearest neighbour per station
+
+cat("  n stations:", nrow(temp_stations_sf), "\n")
+cat("  Nearest-neighbour distance (m):\n")
+cat("    Min:", round(min(temp_nn_dist), 0), "m\n")
+cat("    Max:", round(max(temp_nn_dist), 0), "m\n")
+cat("    Mean:", round(mean(temp_nn_dist), 0),
+    " SD:", round(sd(temp_nn_dist), 0), "m\n")
+
+rm(list = ls(pattern = "^temp_"))
+cat("Cleanup complete.\n\n")
+
 
 cat("=== Script_Revisions_ManuscriptR1.R complete ===\n")
 
