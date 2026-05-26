@@ -5,7 +5,7 @@
 ##    Analyze proportion of detections classified as spawning events by hour
 ##    Reclassifies spawning events without sun category filter to examine full diel patterns
 ##
-## Author: Paul Bzonek [Claude]
+## Author: Paul Bzonek 
 ##
 ## Date Created: 2025-10-07
 ##
@@ -308,11 +308,13 @@ temp_summary_by_category <- df_summary_plot_spawning_hourly %>%
       TRUE ~ "Other"
     )
   ) %>%
+  left_join(df_summary_plot_spawning_movements) %>% 
   group_by(category) %>%
   summarise(
     mean_prop = mean(prop_spawn),
     total_detections = sum(total_detections),
     spawn_detections = sum(spawn_detections),
+    mean_movements = mean(movement_count),
     .groups = "drop"
   )
 

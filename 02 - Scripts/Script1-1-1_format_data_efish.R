@@ -10,7 +10,7 @@
 ##    - Script1-1_format_data_h.R (data_habfish_raw)
 ##    - Raw survey files in 01 - Data/WalleyeSurveyTable/
 ##
-## Author: Paul Bzonek [Claude]
+## Author: Paul Bzonek
 ##
 ## Date Created: 2026-02-06
 ##

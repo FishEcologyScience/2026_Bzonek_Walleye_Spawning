@@ -44,8 +44,6 @@ func_source_clean("02 - Scripts/Script1-3_process_data_t.R", level = param_verbo
 func_source_clean("02 - Scripts/Script2-1_analysis_h_habfish_RF.R", level = param_verbose)
 # Telemetry spawning workflow
 func_source_clean("02 - Scripts/Script2-2_process_t_dataset.R", level = param_verbose)
-# LOVO sensitivity analysis for habitat RF models (Reviewer Comment 36)
-#func_source_clean("02 - Scripts/Script2-3_analysis_h_habfish_RF_sensitivity.R", level = param_verbose)
 # Combined workflows for repeatability
 func_source_clean("02 - Scripts/Script2-4_analysis_c_repeatability.R", level = param_verbose)
 # Spatial metrics for spawning behaviour

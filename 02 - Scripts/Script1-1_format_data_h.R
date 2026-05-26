@@ -362,8 +362,16 @@ rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in 
 rm(df_habfish_key)
 
 
-
-
+### Summaries
+#----------------------------#
+data_habfish_raw %>%
+  group_by(Year) %>%
+  summarise(
+    n_total = n(),
+    n_male   = sum(Sex == "M", na.rm = TRUE),
+    n_female = sum(Sex == "F", na.rm = TRUE),
+    ratio_MF = round(n_male / n_female, 1)
+  )
 
 
 

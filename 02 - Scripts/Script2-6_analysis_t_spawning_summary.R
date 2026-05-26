@@ -6,7 +6,7 @@
 ##    for each fish and year. Based on anti_join logic from
 ##    Script2-X-1_process_t_m_dataset.R
 ##
-## Author: Paul Bzonek [Claude]
+## Author: Paul Bzonek
 ##
 ## Date Created: 2025-01-03
 ##

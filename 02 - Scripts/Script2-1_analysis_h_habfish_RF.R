@@ -47,7 +47,7 @@ model_RF <- randomForest(#formula=Total.Count ~ Slope + Light + Year + Sand + Gr
    mutate(residuals = predicted - Total.Count)
   
   #Get summary stats
-  temp_performance_summary <- temp_performance %>% 
+  temp_performance_summary <- na.omit(temp_performance) %>% 
    summarize(ME = mean(residuals),
              MSE = mean(residuals^2),
              RMSE = sqrt(MSE),

@@ -77,7 +77,8 @@ df_behaviour <- left_join(temp_metrics, temp_metrics_spawn, by=c("animal_id", "y
 #Combine Spawning and non-spawning behaviour
 #----------------------------#
 df_behaviour <- df_behaviour %>% 
- mutate(#Ratio of reciever detections
+ mutate(station_count_spawn = case_when(is.na(station_count_spawn) ~ 0, #Add zeros
+                                        TRUE ~ station_count_spawn),#Ratio of reciever detections
         station_count_ratio = station_count_spawn/station_count,
         station_count_ratio = case_when(is.na(station_count_ratio) ~ 0,
                                         TRUE ~ station_count_ratio),
