@@ -6,10 +6,10 @@
 ##    Calculate repeatability of behavioral traits using mixed models
 ##    Generate behavioral clustering and individual consistency plots
 ##
-## Dependencies: 
-##    - Script1-2_format_data_t.R (data_det)
-##    - Script2-2_process_t_dataset.R (df_spawn)
-##    - Script1-1_format_data_h.R (data_waterlevel, data_fish)
+## Dependencies:
+##    - Script1-2_format_data_t.R       (data_det, data_fish)
+##    - Script1-3_process_data_t.R      (df_spawn, data_spawn, param_age_maturity)
+##    - Script1-1_format_data_h.R       (data_waterlevel)
 ##
 ## Author: Paul Bzonek 
 ##

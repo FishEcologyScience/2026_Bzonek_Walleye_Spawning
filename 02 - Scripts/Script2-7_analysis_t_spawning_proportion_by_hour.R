@@ -5,7 +5,11 @@
 ##    Analyze proportion of detections classified as spawning events by hour
 ##    Reclassifies spawning events without sun category filter to examine full diel patterns
 ##
-## Author: Paul Bzonek 
+## Dependencies:
+##    - Script1-3_process_data_t.R      (data_det_allday_April, data_spawn, df_key)
+##    - Script2-6_analysis_t_spawning_summary.R (df_summary_plot_spawning_hourly)
+##
+## Author: Paul Bzonek
 ##
 ## Date Created: 2025-10-07
 ##

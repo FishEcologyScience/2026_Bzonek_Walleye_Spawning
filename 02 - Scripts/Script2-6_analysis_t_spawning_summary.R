@@ -6,6 +6,10 @@
 ##    for each fish and year. Based on anti_join logic from
 ##    Script2-X-1_process_t_m_dataset.R
 ##
+## Dependencies:
+##    - Script1-2_format_data_t.R       (data_det)
+##    - Script1-3_process_data_t.R      (data_spawn)
+##
 ## Author: Paul Bzonek
 ##
 ## Date Created: 2025-01-03

@@ -6,11 +6,15 @@
 ##    across years using spawning detection data. Combines station 
 ##    usage proportion analysis with specialization indices.
 ##
-## Author: Paul Bzonek 
+## Dependencies:
+##    - Script1-3_process_data_t.R      (df_spawn, data_spawn)
+##    - Script2-4_analysis_c_repeatability.R (df_behaviour)
+##
+## Author: Paul Bzonek
 ##
 ## Date Created: 2025-01-05
 ##
-## --------------------------------------------------------------#  
+## --------------------------------------------------------------#
 ## Modification Notes:  
 ##   - Uses df_spawn as starting point for spawning station preferences
 ##   - Implements station usage proportions with mixed model repeatability
