@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script2-5_analysis_t_station_consistency
+## Script name: Script2-4_analysis_t_station_consistency
 ##
 ## Purpose of script: 
 ##    Analyze consistency of station preferences for individual fish
@@ -8,7 +8,7 @@
 ##
 ## Dependencies:
 ##    - Script1-3_process_data_t.R      (df_spawn, data_spawn)
-##    - Script2-4_analysis_c_repeatability.R (df_behaviour)
+##    - Script2-3_analysis_c_repeatability.R (df_behaviour)
 ##
 ## Author: Paul Bzonek
 ##

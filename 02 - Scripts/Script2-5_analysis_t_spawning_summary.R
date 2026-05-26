@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script2-6_analysis_t_spawning_summary.R
+## Script name: Script2-5_analysis_t_spawning_summary.R
 ##
 ## Purpose of script:
 ##    Calculate the proportion of detections that are spawning-related

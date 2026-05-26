@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script3-2_plot_publication
+## Script name: Script4-2_plot_publication
 ##
 ## Purpose of script: 
 ##    Generate method plots and visualizations for manuscript

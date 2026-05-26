@@ -6,8 +6,8 @@
 ##    Allows sorting by any metric while maintaining consistent x-axis
 ##
 ## Dependencies:
-##    - Script2-4_analysis_c_repeatability.R (df_behaviour)
-##    - Script2-5_analysis_t_station_consistency.R (df_rec_specialization)
+##    - Script2-3_analysis_c_repeatability.R (df_behaviour)
+##    - Script2-4_analysis_t_station_consistency.R (df_rec_specialization)
 ##
 ## Author: Paul Bzonek [Claude]
 ##

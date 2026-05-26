@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script2-4_analysis_c_repeatability
+## Script name: Script2-3_analysis_c_repeatability
 ##
 ## Purpose of script: 
 ##    Combine movement metrics and spawning behavior analysis (combined workflow)

@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script4-1_misc_revisions
+## Script name: Script3-1_misc_revisions
 ##
 ## Purpose of script:
 ##    Stand-alone code additions addressing peer review comments.
@@ -14,7 +14,7 @@
 ##    - data_habfish_raw        (Script1-1)
 ##    - data_efish_fish         (Script1-1-1)
 ##    - data_spawn              (Script1-3)
-##    - df_summary_plot_spawning_hourly, df_SunCategory (Script2-7)
+##    - df_summary_plot_spawning_hourly, df_SunCategory (Script2-6)
 ## --------------------------------------------------------------#
 ## Modification Notes:
 ##
@@ -24,7 +24,7 @@
 # #####  Comment 36 Part A: Habitat Parameter Rationale  ##########----
 # #----------------------------#
 # # Generates a plain-text summary of habitat predictor selection.
-# # Rebuild correlation matrix inline (does not require Script3-2 to
+# # Rebuild correlation matrix inline (does not require Script4-2 to
 # # have been run in current session).
 # #-------------------------------------------------------------#
 # 
@@ -137,7 +137,7 @@ cat("Cleanup complete.\n\n")
 # #####  Comment 43: Daytime Telemetry Diel Comparison  ###########----
 # #----------------------------#
 # # Compares spawning detection rates across diel periods (day, dawn,
-# # dusk, night) using data from Script2-7 which retains all-day April
+# # dusk, night) using data from Script2-6 which retains all-day April
 # # detections before the dusk/night filter is applied.
 # #-------------------------------------------------------------#
 
@@ -169,12 +169,12 @@ print(temp_summary_diel)
 # Identify how many individuals skipped spawning for a year
 #-------------------------------------------------------------#
 
-# All fish-years with April presence (mirrors Script2-6 base)
+# All fish-years with April presence (mirrors Script2-5 base)
 temp_all_fish_years <- data_det %>%
   mutate(year = lubridate::year(detection_timestamp_utc)) %>%
   group_by(animal_id, year) %>%
   summarise(n_det = n(), .groups = "drop") %>%
-  filter(n_det >= 10)  # match Script2-6 threshold
+  filter(n_det >= 10)  # match Script2-5 threshold
 
 # Fish-years with confirmed spawning events
 temp_spawn_years <- data_spawn %>%

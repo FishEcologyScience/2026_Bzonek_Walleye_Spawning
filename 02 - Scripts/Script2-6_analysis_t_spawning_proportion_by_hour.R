@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script2-7_analysis_t_spawning_proportion_by_hour
+## Script name: Script2-6_analysis_t_spawning_proportion_by_hour
 ##
 ## Purpose of script:
 ##    Analyze proportion of detections classified as spawning events by hour
@@ -7,7 +7,7 @@
 ##
 ## Dependencies:
 ##    - Script1-3_process_data_t.R      (data_det_allday_April, data_spawn, df_key)
-##    - Script2-6_analysis_t_spawning_summary.R (df_summary_plot_spawning_hourly)
+##    - Script2-5_analysis_t_spawning_summary.R (df_summary_plot_spawning_hourly)
 ##
 ## Author: Paul Bzonek
 ##

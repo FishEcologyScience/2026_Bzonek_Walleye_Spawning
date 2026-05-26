@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script4-2_analysis_c_maturity
+## Script name: Script3-2_analysis_c_maturity
 ##
 ## Purpose of script:
 ##    Estimate age at capture from von Bertalanffy growth equation,
@@ -9,7 +9,7 @@
 ##
 ## Dependencies:
 ##    - Script1-2_format_data_t.R       (data_fish)
-##    - Script2-4_analysis_c_repeatability.R (df_behaviour)
+##    - Script2-3_analysis_c_repeatability.R (df_behaviour)
 ##    - 01 - Data/HH_Fish_Workbook_Jun2024.xlsx (glatos_caught_date)
 ##
 ## Author: Paul Bzonek 
