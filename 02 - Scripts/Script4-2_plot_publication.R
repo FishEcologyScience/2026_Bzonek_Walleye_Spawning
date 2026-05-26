@@ -1,5 +1,5 @@
 ## --------------------------------------------------------------#
-## Script name: Script3-2_plot_publication
+## Script name: Script4-2_plot_publication
 ##
 ## Purpose of script: 
 ##    Generate method plots and visualizations for manuscript
@@ -83,8 +83,42 @@ ggsave(paste0(param_output_dir, "/Fig4_BivariatePredictors.jpeg"),
 
 
 
-### Figure 5: Repeatability 
+### Figure 5: Repeatability
 #----------------------------#
+  #  ## REVISION - REVIEWER COMMENT 23 ──────────────────────────
+  # Add 25th / 50th / 75th percentile rank indicators to each panel.
+  temp_n_fish_repeat <- length(unique(df_behaviour$animal_id))
+  temp_p25r <- temp_n_fish_repeat * 0.25
+  temp_p50r <- temp_n_fish_repeat * 0.50
+  temp_p75r <- temp_n_fish_repeat * 0.75
+
+  temp_pct_layers <- list(
+    ggplot2::geom_vline(xintercept = temp_p25r, linetype = "dotted",  colour = "grey50", linewidth = 0.5),
+    ggplot2::geom_vline(xintercept = temp_p50r, linetype = "dashed",  colour = "grey40", linewidth = 0.6),
+    ggplot2::geom_vline(xintercept = temp_p75r, linetype = "longdash", colour = "grey30", linewidth = 0.5),
+    ggplot2::annotate("text", x = temp_p25r, y = Inf, label = "25th",
+                      vjust = 1.5, hjust = -0.1, size = 2.8, colour = "grey50"),
+    ggplot2::annotate("text", x = temp_p50r, y = Inf, label = "50th",
+                      vjust = 1.5, hjust = -0.1, size = 2.8, colour = "grey40"),
+    ggplot2::annotate("text", x = temp_p75r, y = Inf, label = "75th",
+                      vjust = 1.5, hjust = -0.1, size = 2.8, colour = "grey30")
+  )
+
+  # Add geom_rug on y-axis of each panel (shows value distribution)
+  temp_rug <- geom_rug(sides = "r", outside=TRUE, position = "jitter",
+                       alpha = 0.4, linewidth = 0.4)
+  
+  # geom_rug outside plot bounds needs to disable coord clip
+  temp_coord <- coord_cartesian(clip = "off")
+  
+  plots$behaviour$station_count          <- plots$behaviour$station_count          + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$station_proportion     <- plots$behaviour$station_proportion     + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$station_specialization <- plots$behaviour$station_specialization + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$residence_duration     <- plots$behaviour$residence_duration     + temp_pct_layers + temp_rug + temp_coord
+  plots$behaviour$spawning_depth         <- plots$behaviour$spawning_depth         + temp_pct_layers + temp_rug + temp_coord
+ 
+  #  ## END REVISION ──────────────────────────────────────────────
+
 ### Independent rankings
 plots$behaviour$FinalRepeatability <-
  with(plots$behaviour,
@@ -123,16 +157,6 @@ ggsave(paste0(param_output_dir, "/FigS1_LightIndex.tiff"),
        plot = plots$maps$LightIndex, width = 7, height = 5.25, dpi = 400, units = "in")
 ggsave(paste0(param_output_dir, "/FigS1_LightIndex.jpeg"),
        plot = plots$maps$LightIndex, width = 7, height = 5.25, dpi = 400, units = "in")
-
-
-### S2: Walleye By Year
-#----------------------------#
-plots$maps$Walleye
-
-ggsave(paste0(param_output_dir, "/FigS4_WalleyeByYear.tiff"),
-       plot = plots$maps$Walleye, width = 7, height = 6, dpi = 400, units = "in")
-ggsave(paste0(param_output_dir, "/FigS4_WalleyeByYear.jpeg"),
-       plot = plots$maps$Walleye, width = 7, height = 6, dpi = 400, units = "in")
 
 
 ### S3: Variable Correlations 
@@ -201,6 +225,25 @@ ggsave(paste0(param_output_dir, "/FigSY_Prop_WaterLevel.jpeg"),
 #----------------------------#
 plots$maps$Efish
 ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.tiff"),
-       plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")
+       plot = plots$maps$Efish, width = 7, height = 6, dpi = 400, units = "in")
 ggsave(paste0(param_output_dir, "/FigSX_EFish_Full.jpeg"),
-       plot = plots$methods$efish_full, width = 7, height = 6, dpi = 400, units = "in")
+       plot = plots$maps$Efish, width = 7, height = 6, dpi = 400, units = "in")
+ 
+
+### SY: Walleye growth curve
+#----------------------------#
+plots$behaviour$growth_trajectory_combined
+ggsave(paste0(param_output_dir, "/FigSY_Growth_Curve.tiff"),
+       plot = plots$behaviour$growth_trajectory_combined, width = 7, height = 8, dpi = 400, units = "in")
+ggsave(paste0(param_output_dir, "/FigSY_Growth_Curve.jpeg"),
+       plot = plots$behaviour$growth_trajectory_combined, width = 7, height = 8, dpi = 400, units = "in")
+
+
+#####Cleanup #####################################################----
+#-------------------------------------------------------------#
+
+rm(list = ls(pattern = "^temp_"))
+# Defensive removal of orphaned for-loop variables from a prior session
+for (obj in c("d", "i", "p", "tr", "yvar")) if (exists(obj)) rm(list = obj)
+rm(obj)
+cat("Cleanup complete.\n")

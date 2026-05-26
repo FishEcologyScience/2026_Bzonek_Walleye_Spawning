@@ -25,4 +25,6 @@
 # Specific directories 
 # 01 - Data/
 # 04 - Outputs/
+.claude/
+claude/
 CLAUDE.md

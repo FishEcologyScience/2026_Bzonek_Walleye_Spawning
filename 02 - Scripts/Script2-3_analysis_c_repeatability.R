@@ -1,15 +1,15 @@
 ## --------------------------------------------------------------#
-## Script name: Script2-4_analysis_c_repeatability
+## Script name: Script2-3_analysis_c_repeatability
 ##
 ## Purpose of script: 
 ##    Combine movement metrics and spawning behavior analysis (combined workflow)
 ##    Calculate repeatability of behavioral traits using mixed models
 ##    Generate behavioral clustering and individual consistency plots
 ##
-## Dependencies: 
-##    - Script1-2_format_data_t.R (data_det)
-##    - Script2-2_process_t_dataset.R (df_spawn)
-##    - Script1-1_format_data_h.R (data_waterlevel, data_fish)
+## Dependencies:
+##    - Script1-2_format_data_t.R       (data_det, data_fish)
+##    - Script1-3_process_data_t.R      (df_spawn, data_spawn, param_age_maturity)
+##    - Script1-1_format_data_h.R       (data_waterlevel)
 ##
 ## Author: Paul Bzonek 
 ##
@@ -21,7 +21,6 @@
 ## --------------------------------------------------------------#
 
 # Grab movement metrics
-
 #####Minimum convex polygon values ###############################----
 #-------------------------------------------------------------#
 
@@ -53,7 +52,7 @@ temp_metrics
 # Look at spawning data
 #----------------------------#
 temp_metrics_spawn <- df_spawn %>% 
- group_by(animal_id, year) %>% #Give up on week
+ group_by(animal_id, year) %>% 
  summarize(station_count_spawn = length(unique(station_no)),
            mcp95_spawn = {tryCatch(#Add a tryCatch to keep code running during error
                                    {# Create a spatial points object for this grouping
@@ -78,7 +77,8 @@ df_behaviour <- left_join(temp_metrics, temp_metrics_spawn, by=c("animal_id", "y
 #Combine Spawning and non-spawning behaviour
 #----------------------------#
 df_behaviour <- df_behaviour %>% 
- mutate(#Ratio of reciever detections
+ mutate(station_count_spawn = case_when(is.na(station_count_spawn) ~ 0, #Add zeros
+                                        TRUE ~ station_count_spawn),#Ratio of reciever detections
         station_count_ratio = station_count_spawn/station_count,
         station_count_ratio = case_when(is.na(station_count_ratio) ~ 0,
                                         TRUE ~ station_count_ratio),
@@ -127,9 +127,45 @@ df_behaviour <- df_behaviour %>%
         SpawnBinary = case_when(is.na(detcount_sum)~FALSE,
                                 detcount_sum == 0 ~ FALSE,
                                 TRUE ~ TRUE),
-        length_total = as.numeric(length_total)) %>% 
- filter(length_total > 400) %>% 
+        length_total = as.numeric(length_total)) %>%
+ #filter(length_total > 400) %>% Removing as we now have the age threshold
  ungroup()
+
+
+
+#  ## REVISION - PIPELINE ENRICHMENT (predicted_FL) ──────────────────────────
+### Von Bertalanffy growth parameters (fork length, mm)
+#----------------------------#
+# Values from Brooks et al. 2025
+
+# Lake Ontario model: "FL = 601.41 - e^(-0.31*(age+1.006))"
+# FL = L_inf * (1 - exp(-K * (age - t0)))
+# where t0 = -1.006 so (age - t0) = (age + 1.006)
+# temp_vb_linf <- 601.41   # asymptotic fork length (mm)
+# temp_vb_k    <- 0.31     # growth coefficient
+# temp_vb_t0   <- -1.006   # theoretical age at length zero (years)
+
+# Hamilton Harbour Model: "FL = 642.5 - e^(-0.375*(age+0.5))"
+# FL = L_inf * (1 - exp(-K * (age - t0)))
+temp_vb_linf <- 642.5   # asymptotic fork length (mm)
+temp_vb_k    <- 0.375   # growth coefficient
+temp_vb_t0   <- -0.5    # theoretical age at length zero (years)
+
+df_behaviour <- df_behaviour %>%
+  left_join(
+    select(data_fish, animal_id, tag_year, age_at_tag, length_fork),
+    by = "animal_id"
+  ) %>%
+  mutate(
+    year_numeric    = as.integer(as.character(year)),  # df_behaviour$year is a factor; direct as.integer() returns level indices, not values
+    years_since_tag = year_numeric - tag_year,
+    age_pred        = age_at_tag + years_since_tag,
+    predicted_FL    = temp_vb_linf * (1 - exp(-temp_vb_k * (age_pred - temp_vb_t0))),
+    predicted_FL    = round(pmax(predicted_FL, length_fork), 1)  # prevents fish above L∞ from appearing to shrink toward the asymptote
+  ) %>%
+  filter(age_pred > param_age_maturity)  # retain mature fish-years only (males mature at age 2)
+
+#  ## END REVISION ──────────────────────────────────────────────────────────────
   
 #Clean-up
 rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in name
@@ -138,15 +174,15 @@ rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in 
 #Scale the data
 #----------------------------#
 df_behaviour_scaled <- df_behaviour %>%
-  mutate(across(station_count:detcount_sum, ~ scale(.) %>% as.numeric())
+  mutate(across(c(station_count:detcount_sum, age_pred, predicted_FL), ~ scale(.) %>% as.numeric())
          )
 
 #####Plot data ###################################################----
 #-------------------------------------------------------------#
 #Spawning by Size
 plots$behaviour$spawn_by_size <- df_behaviour %>% 
- mutate(length_total = round(length_total, digits=-1)) %>% 
- ggplot(aes(x=length_total, fill=SpawnBinary, color=SpawnBinary)) +
+ mutate(predicted_FL = round(predicted_FL, digits=-1)) %>% 
+ ggplot(aes(x=predicted_FL, fill=SpawnBinary, color=SpawnBinary)) +
    geom_histogram(position="identity", alpha=0.5)
 plots$behaviour$spawn_by_size 
 
@@ -230,27 +266,28 @@ plots$behaviour$CombinedRepeatability
 #Clean-up
 rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in name
 
- 
+
+
 
 ##### Analysze repeatability #####################################----
 #-------------------------------------------------------------#
 
-rpt_behaviour_station <- rptR::rpt(station_count_spawn ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
-                             #station_count_spawn ~ length_total + (1|animal_id),
+rpt_behaviour_station <- rptR::rpt(station_count_spawn ~ water_level + predicted_FL + detcount_all_sum + (1|animal_id) + (1|year),
+                             #station_count_spawn ~ predicted_FL + (1|animal_id),
                           grname = "animal_id", data = df_behaviour_scaled, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
 summary(rpt_behaviour_station)
 plot(rpt_behaviour_station)
 
 
-rpt_behaviour_station_ratio <- rptR::rpt(station_count_ratio ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
+rpt_behaviour_station_ratio <- rptR::rpt(station_count_ratio ~ water_level + predicted_FL + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", data = df_behaviour_scaled, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
 summary(rpt_behaviour_station_ratio)
 plot(rpt_behaviour_station_ratio)
 
 
-rpt_behaviour_residence <- rptR::rpt(residence_mean ~ length_total + detcount_all_sum + (1|animal_id) + (1|year),
+rpt_behaviour_residence <- rptR::rpt(residence_mean ~ predicted_FL + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", 
                           data = filter(df_behaviour_scaled, SpawnBinary == TRUE), 
                           datatype = "Gaussian",
@@ -258,11 +295,34 @@ rpt_behaviour_residence <- rptR::rpt(residence_mean ~ length_total + detcount_al
 summary(rpt_behaviour_residence)
 plot(rpt_behaviour_residence)
 
-rpt_behaviour_depth <- rptR::rpt(depth_mean ~ water_level + length_total + detcount_all_sum + (1|animal_id) + (1|year),
+rpt_behaviour_depth <- rptR::rpt(depth_mean ~ water_level + predicted_FL + detcount_all_sum + (1|animal_id) + (1|year),
                           grname = "animal_id", data = df_behaviour_scaled, datatype = "Gaussian",
                           nboot = 100, npermut = 0)
 summary(rpt_behaviour_depth)
 plot(rpt_behaviour_depth)
+
+  #  ## REVISION - REVIEWER COMMENT 32 ──────────────────────────
+  temp_size_metrics <- c("station_count", "station_count_ratio",
+                          "residence_mean", "depth_mean")
+
+  temp_summary_size_cor <- purrr::map_dfr(temp_size_metrics, function(metric) {
+    temp_test <- cor.test(df_behaviour$predicted_FL, df_behaviour[[metric]],
+                           method = "spearman", exact = FALSE)
+    data.frame(
+      metric  = metric,
+      rho     = round(temp_test$estimate, 2),
+      p_value = round(temp_test$p.value, 4),
+      n       = sum(!is.na(df_behaviour$predicted_FL) & !is.na(df_behaviour[[metric]]))
+    )
+  })
+
+  cat("--- Spearman Correlations: Total Length vs. Behaviour Metrics ---\n")
+  print(temp_summary_size_cor)
+
+  rm(list = ls(pattern = "^temp_summary_size"))
+  rm(temp_size_metrics)
+  cat("Cleanup complete.\n")
+  #  ## END REVISION ──────────────────────────────────────────────
 
 
  

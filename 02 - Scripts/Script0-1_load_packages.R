@@ -60,6 +60,7 @@ library('patchwork')    #Combine plots with + and / operators
 #----------------------------#
 source("02 - Scripts/01 - Functions/Function1-1_JakesFunctions.R")
 source("02 - Scripts/01 - Functions/Function1-3_HelperFunctions.R")
+source("02 - Scripts/01 - Functions/Function1-4_GitFunctions.R")
 
 
 ###Adjust Settings

@@ -183,9 +183,22 @@ str(data_efish_fish)
        
        
    ###Apply cutoff distance to matching hab and efishing data
-   df_habfish_key <- temp_sitecode %>% 
-    filter(eucdist_m <= param_min_dist) %>% 
+   df_habfish_key <- temp_sitecode %>%
+    filter(eucdist_m <= param_min_dist) %>%
     select(key_efish_obs, Sample, Observation, Date, PointID)
+
+  #  ## REVISION - REVIEWER COMMENT 33 ──────────────────────────
+  temp_n_total    <- nrow(temp_sitecode)
+  temp_n_matched  <- nrow(df_habfish_key)
+  temp_n_excluded <- temp_n_total - temp_n_matched
+
+  cat("--- 25m Habitat Buffer Exclusions ---\n")
+  cat("  Aggregates with distance calculated:", format(temp_n_total, big.mark = ","), "\n")
+  cat("  Retained (within 25m):", format(temp_n_matched, big.mark = ","),
+      "(", round(100 * temp_n_matched / temp_n_total, 1), "%)\n")
+  cat("  Excluded (>25m):", format(temp_n_excluded, big.mark = ","),
+      "(", round(100 * temp_n_excluded / temp_n_total, 1), "%)\n")
+  #  ## END REVISION ──────────────────────────────────────────────
 
 #Clean-up
 rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in name
@@ -349,8 +362,16 @@ rm(list = paste(ls(pattern="temp"))) #Remove environment objects with 'temp' in 
 rm(df_habfish_key)
 
 
-
-
+### Summaries
+#----------------------------#
+data_habfish_raw %>%
+  group_by(Year) %>%
+  summarise(
+    n_total = n(),
+    n_male   = sum(Sex == "M", na.rm = TRUE),
+    n_female = sum(Sex == "F", na.rm = TRUE),
+    ratio_MF = round(n_male / n_female, 1)
+  )
 
 
 
