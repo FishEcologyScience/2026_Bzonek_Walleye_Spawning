@@ -66,9 +66,9 @@ ggsave(paste0(param_output_dir, "/Fig2_RF_PredictorImportance.jpeg"),
 plots$model_RF_plot$univiariate_RF2$combined
 
 ggsave(paste0(param_output_dir, "/Fig3_UnivariatePredictors.tiff"),
-       plot = plots$model_RF_plot$univiariate_RF2$combined, width = 7, height = 10, dpi = 400, units = "in")
+       plot = plots$model_RF_plot$univiariate_RF2$combined, width = 7, height = 9, dpi = 400, units = "in")
 ggsave(paste0(param_output_dir, "/Fig3_UnivariatePredictors.jpeg"),
-       plot = plots$model_RF_plot$univiariate_RF2$combined, width = 7, height = 10, dpi = 400, units = "in")
+       plot = plots$model_RF_plot$univiariate_RF2$combined, width = 7, height = 9, dpi = 600, units = "in")
 
 
 
@@ -79,7 +79,7 @@ plots$model_RF_plot$biviariate_RF2$combined
 ggsave(paste0(param_output_dir, "/Fig4_BivariatePredictors.tiff"),
        plot = plots$model_RF_plot$biviariate_RF2$combined, width = 7, height = 6, dpi = 400, units = "in")
 ggsave(paste0(param_output_dir, "/Fig4_BivariatePredictors.jpeg"),
-       plot = plots$model_RF_plot$biviariate_RF2$combined, width = 7, height = 6, dpi = 400, units = "in")
+       plot = plots$model_RF_plot$biviariate_RF2$combined, width = 7, height = 6, dpi = 800, units = "in")
 
 
 
@@ -133,9 +133,9 @@ plots$behaviour$FinalRepeatability <-
 plots$behaviour$FinalRepeatability
 
 ggsave(paste0(param_output_dir, "/Fig5_Repeatability.tiff"),
-       plot = plots$behaviour$FinalRepeatability, width = 7, height = 10, dpi = 400, units = "in")
+       plot = plots$behaviour$FinalRepeatability, width = 7, height = 9, dpi = 400, units = "in")
 ggsave(paste0(param_output_dir, "/Fig5_Repeatability.jpeg"),
-       plot = plots$behaviour$FinalRepeatability, width = 7, height = 10, dpi = 400, units = "in")
+       plot = plots$behaviour$FinalRepeatability, width = 7, height = 9, dpi = 400, units = "in")
 
 
 ### Combined rankings

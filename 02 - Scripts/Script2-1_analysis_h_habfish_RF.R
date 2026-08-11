@@ -175,11 +175,12 @@ plots$model_RF_plot$RF_R2
 ###Univariate Plots
 #----------------------------#
 plots$model_RF_plot$univiariate_RF2 <- list() #Make list to hold plots
-#ylab(bquote("Marginal effect" ~(hat(y))))
+
 #Year
 plots$model_RF_plot$univiariate_RF2$Year <- model_RF2 %>% pdp::partial(pred.var = "Year", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Year.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Year, aes(x=as.factor(Year), y=yhat))+
   geom_boxplot(colour="#8e3253", lwd=1.25)+geom_line(aes(group=1),colour="#8e3253")+theme_bw()+xlab("year")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Year.plot
@@ -188,6 +189,7 @@ plots$model_RF_plot$univiariate_RF2$Year.plot
 plots$model_RF_plot$univiariate_RF2$Slope <- model_RF2 %>% pdp::partial(pred.var = "Slope", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Slope.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Slope, aes(x=Slope, y=yhat))+
   geom_smooth(col="#018be7",fill="NA", linewidth=2)+theme_bw()+xlab("slope (°)")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Slope.plot
@@ -196,6 +198,7 @@ plots$model_RF_plot$univiariate_RF2$Slope.plot
 plots$model_RF_plot$univiariate_RF2$Light <- model_RF2 %>% pdp::partial(pred.var = "Light", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Light.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Light, aes(x=Light, y=yhat))+
   geom_smooth(col="#018be7",fill="NA", linewidth=2)+theme_bw()+xlab("light index")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Light.plot
@@ -204,6 +207,7 @@ plots$model_RF_plot$univiariate_RF2$Light.plot
 plots$model_RF_plot$univiariate_RF2$Sand <- model_RF2 %>% pdp::partial(pred.var = "Sand", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Sand.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Sand, aes(x=Sand, y=yhat))+
   geom_smooth(col="darkgreen",fill="NA", linewidth=2)+theme_bw()+xlab("sand (prop. cover)")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Sand.plot
@@ -212,6 +216,7 @@ plots$model_RF_plot$univiariate_RF2$Sand.plot
 plots$model_RF_plot$univiariate_RF2$Gravel <- model_RF2 %>% pdp::partial(pred.var = "Gravel", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Gravel.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Gravel, aes(x=Gravel, y=yhat))+
   geom_smooth(col="darkgreen",fill="NA", linewidth=2)+theme_bw()+xlab("gravel (prop. cover)")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Gravel.plot
@@ -220,6 +225,7 @@ plots$model_RF_plot$univiariate_RF2$Gravel.plot
 plots$model_RF_plot$univiariate_RF2$Cobble <- model_RF2 %>% pdp::partial(pred.var = "Cobble", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Cobble.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Cobble, aes(x=Cobble, y=yhat))+
   geom_smooth(col="darkgreen",fill="NA", linewidth=2)+theme_bw()+xlab("cobble (prop. cover)")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Cobble.plot
@@ -228,6 +234,7 @@ plots$model_RF_plot$univiariate_RF2$Cobble.plot
 plots$model_RF_plot$univiariate_RF2$Rubble <- model_RF2 %>% pdp::partial(pred.var = "Rubble", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Rubble.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Rubble, aes(x=Rubble, y=yhat))+
   geom_smooth(col="darkgreen",fill="NA", linewidth=2)+theme_bw()+xlab("rubble (prop. cover)")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Rubble.plot
@@ -236,6 +243,7 @@ plots$model_RF_plot$univiariate_RF2$Rubble.plot
 plots$model_RF_plot$univiariate_RF2$SubstrateDiversity <- model_RF2 %>% pdp::partial(pred.var = "SubstrateDiversity", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$SubstrateDiversity.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$SubstrateDiversity, aes(x=SubstrateDiversity, y=yhat))+
   geom_smooth(col="darkgreen",fill="NA", linewidth=2)+theme_bw()+xlab("substrate diversity (Simpson's D)")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$SubstrateDiversity.plot
@@ -244,6 +252,7 @@ plots$model_RF_plot$univiariate_RF2$SubstrateDiversity.plot
 plots$model_RF_plot$univiariate_RF2$Fetch <- model_RF2 %>% pdp::partial(pred.var = "Fetch", prob = TRUE, which.class=2, train=data_habfish_pseudo) 
 plots$model_RF_plot$univiariate_RF2$Fetch.plot <- ggplot(plots$model_RF_plot$univiariate_RF2$Fetch, aes(x=Fetch, y=yhat))+
   geom_smooth(col="#018be7",fill="NA", linewidth=2)+theme_bw()+xlab("fetch (km)")+
+  ylab(bquote("Marginal effect" ~(hat(y))))+
   coord_cartesian(ylim=c(0.3, 0.7))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 plots$model_RF_plot$univiariate_RF2$Fetch.plot
@@ -280,8 +289,8 @@ plots$model_RF_plot$biviariate_RF2$SlopeCobble <- model_RF2 %>%
   ggplot(aes(x=Slope, y=Cobble,  fill=yhat))+
   geom_tile()+
   scale_fill_viridis_c()+
-  xlab("Slope")+ylab("Cobble")+
-  labs(title = "Slope vs Cobble")
+  xlab("slope (°)")+ylab("cobble (prop. cover)")+
+  labs(title = "Slope vs Cobble", fill = bquote("Marginal effect" ~(hat(y))))
 plots$model_RF_plot$biviariate_RF2$SlopeCobble
 
 #Sand vs Slope
@@ -290,8 +299,8 @@ plots$model_RF_plot$biviariate_RF2$SlopeSand <- model_RF2 %>%
   ggplot(aes(x=Slope, y=Sand,  fill=yhat))+
   geom_tile()+
   scale_fill_viridis_c()+
-  xlab("Slope")+ylab("Sand")+
-  labs(title = "Slope vs Sand")
+  xlab("slope (°)")+ylab("sand (prop. cover)")+
+  labs(title = "Slope vs Sand", fill = bquote("Marginal effect" ~(hat(y))))
 plots$model_RF_plot$biviariate_RF2$SlopeSand
 
 #Gravel vs Slope
@@ -300,8 +309,8 @@ plots$model_RF_plot$biviariate_RF2$SlopeGravel <- model_RF2 %>%
   ggplot(aes(x=Slope, y=Gravel,  fill=yhat))+
   geom_tile()+
   scale_fill_viridis_c()+
-  xlab("Slope")+ylab("Gravel")+
-  labs(title = "Slope vs Gravel")
+  xlab("slope (°)")+ylab("gravel (prop. cover)")+
+  labs(title = "Slope vs Gravel", fill = bquote("Marginal effect" ~(hat(y))))
 plots$model_RF_plot$biviariate_RF2$SlopeGravel
 
 #Substrate vs Slope
@@ -310,8 +319,8 @@ plots$model_RF_plot$biviariate_RF2$SlopeSubstrateDiversity <- model_RF2 %>%
   ggplot(aes(x=Slope, y=SubstrateDiversity,  fill=yhat))+
   geom_tile()+
   scale_fill_viridis_c()+
-  xlab("Slope")+ylab("SubstrateDiversity")+
-  labs(title = "Slope vs SubstrateDiversity")
+  xlab("slope (°)")+ylab("Substrate diversity (Simpson's D)")+
+  labs(title = "Slope vs Substrate diversity", fill = bquote("Marginal effect" ~(hat(y))))
 plots$model_RF_plot$biviariate_RF2$SlopeSubstrateDiversity
 
 plots$model_RF_plot$biviariate_RF2$combined <-
