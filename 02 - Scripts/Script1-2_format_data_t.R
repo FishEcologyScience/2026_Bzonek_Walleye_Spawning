@@ -30,9 +30,8 @@ library(data.table)
 #----------------------------#
 #Load the big telem file
 cat("Loading detections data (",
-    round(file.size("01 - Data/HH_detections_clipped_filtered_2015-2023_good.rds")/1024/1024, 1),
+    round(file.size("01 - Data/HH_detections_Walleye_optimized_indexed.rds")/1024/1024, 1),
     "MB) - this will take a few minutes...\n")
-#data_det_raw <- readRDS("01 - Data/HH_detections_clipped_filtered_2015-2023_good.rds")
 data_det_raw <- readRDS("01 - Data/HH_detections_Walleye_optimized_indexed.rds")
 cat("✓ Loaded", format(nrow(data_det_raw), big.mark = ","), "detection records\n")
 beepr::beep(sound=2) #Completeness chime.
