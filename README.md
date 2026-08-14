@@ -1,13 +1,12 @@
 # 2026_Bzonek_Walleye_Spawning
+[![DOI](https://img.shields.io/badge/DOI-10.1007%2Fs00027--026--01344--w-blue)](https://doi.org/10.1007/s00027-026-01344-w)
 
 [![DOI](https://zenodo.org/badge/1104199933.svg)](https://doi.org/10.5281/zenodo.18675473)
 
 ## Overview
 Code and data processing pipeline supporting the manuscript:
 
-> **Habitat selection and behavioural repeatability during spawning in stocked Walleye (*Sander vitreus*) in Hamilton Harbour**
->
-> Bzonek PA, Croft-White MV, Reddick DT, Turner NA, MacLeod MC, Cooke SJ, Brooks JL, Hasler C, Midwood JD
+> Bzonek PA, Croft-White MV, Reddick DT, Turner NA, MacLeod MC, Cooke SJ, Brooks JL, Hasler C, Midwood JD. 2026. Habitat selection and behavioural repeatability during spawning in stocked Walleye (*Sander vitreus*) in Hamilton Harbour. Aquatic Sciences. https://doi.org/10.1007/s00027-026-01344-w
 
 This study paired shoreline habitat surveys with spring electrofishing surveys (2022-2024) and multi-year acoustic telemetry (2016-2023) to evaluate habitat associations and the repeatability of stocked Walleye spawning behaviour in Hamilton Harbour, a degraded embayment of Lake Ontario. Random forest models identified cobble-gravel substrates, intermediate shoreline slopes, and high substrate diversity as key habitat predictors. Telemetry-derived spawning behaviours revealed significant individual consistency in spatial metrics (station count, station ratio, specialization index; R = 0.34-0.44), while total spawning duration varied widely among individuals and years.
 
@@ -53,9 +52,7 @@ source("02 - Scripts/Script0-0_UserInterface.R")
 ## Citation
 If you use this code or data, please cite the associated publication:
 
-> Bzonek PA, Croft-White MV, Reddick DT, Turner NA, MacLeod MC, Cooke SJ, Brooks JL, Hasler C, Midwood JD. Habitat selection and behavioural repeatability during spawning in stocked Walleye (*Sander vitreus*) in Hamilton Harbour. *In review*.
-
-<!-- TODO: Update with journal name and DOI once published -->
+> Bzonek PA, Croft-White MV, Reddick DT, Turner NA, MacLeod MC, Cooke SJ, Brooks JL, Hasler C, Midwood JD. 2026. Habitat selection and behavioural repeatability during spawning in stocked Walleye (*Sander vitreus*) in Hamilton Harbour. Aquatic Sciences. https://doi.org/10.1007/s00027-026-01344-w
 
 ## License
 This project is licensed under the [MIT License](LICENSE). Copyright (c) 2026 His Majesty the King in Right of Canada, as represented by the Minister of Fisheries and Oceans.
